@@ -83,11 +83,20 @@ export default function MenuCard({ item }) {
                  bg-coffee-900/60 shadow-lg shadow-black/20 transition-colors duration-300
                  hover:border-gold-500/40 hover:shadow-xl hover:shadow-black/30"
     >
-      <div className="relative aspect-square overflow-hidden bg-cream-100">
+      {/* Image area.
+          - 4/5 portrait ratio (standard product photography) instead of
+            1:1 so user-supplied product shots crop less aggressively.
+          - Background is coffee-800 (dark) instead of cream-100 (light)
+            so any momentary loading state reads as intentional, not broken.
+          - Eager loading (no `loading="lazy"`): only ~10 images total and
+            this section is below the fold, but lazy + slow connections
+            produced visible white-blank placeholders that looked like
+            missing images. Total payload is <1MB; eager is fine. */}
+      <div className="relative aspect-[4/5] overflow-hidden bg-coffee-800">
         <motion.img
           src={item.image}
           alt={item.name}
-          loading="lazy"
+          decoding="async"
           style={{
             x: finePointer ? imgX : 0,
             y: finePointer ? imgY : 0,
@@ -95,6 +104,13 @@ export default function MenuCard({ item }) {
           }}
           transition={{ duration: 0.35, ease: "easeOut" }}
           className="h-full w-full object-cover"
+          onError={(e) => {
+            // If an image fails to decode, log + replace with a neutral
+            // gradient so the card never shows a literal white square.
+            console.error('[MenuCard] image failed to load:', item.image);
+            e.currentTarget.style.background = 'linear-gradient(135deg, #523620, #2a1c12)';
+            e.currentTarget.style.minHeight = '100%';
+          }}
         />
         <div
           aria-hidden="true"
