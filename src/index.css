@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens — "Luxing Conlecting" theme (Concept 1)
+   Warm amber/caramel + deep coffee brown + champagne gold + cream.
+   Defined once here; every component reads from these via Tailwind's
+   generated utility classes (bg-coffee-..., text-gold-..., font-display).
+------------------------------------------------------------------- */
+@theme {
+  --font-display: "Playfair Display", "Cormorant Garamond", serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* Coffee browns — backgrounds, structure */
+  --color-coffee-950: #1f140d;
+  --color-coffee-900: #2a1c12;
+  --color-coffee-800: #3d2817;
+  --color-coffee-700: #523620;
+  --color-coffee-600: #6b452a;
+
+  /* Caramel / amber — mid-tones, secondary accents */
+  --color-caramel-500: #c8956b;
+  --color-caramel-400: #d6a87e;
+  --color-caramel-300: #e3c2a0;
+
+  /* Champagne gold — the signature accent (ribbons, CTAs, dividers) */
+  --color-gold-600: #b8924f;
+  --color-gold-500: #d4af7a;
+  --color-gold-400: #e2c697;
+
+  /* Cream / ivory — light surfaces, body copy on dark */
+  --color-cream-100: #faf6f0;
+  --color-cream-200: #f5ede0;
+  --color-cream-300: #ecdfc9;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-coffee-950);
+  color: var(--color-cream-200);
+  font-family: var(--font-body);
+}
+
+/* Respect reduced-motion preference site-wide */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Thin custom scrollbar to match the warm/dark theme */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-coffee-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-600);
+  border-radius: 8px;
+}
