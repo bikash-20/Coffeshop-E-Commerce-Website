@@ -10,13 +10,28 @@ import { useLenis } from "./hooks/useLenis.jsx";
 import ScrollProgress from "./components/ui/ScrollProgress.jsx";
 import CursorFollower from "./components/ui/CursorFollower.jsx";
 import FloatingWhatsApp from "./components/ui/FloatingWhatsApp.jsx";
+import Marquee from "./components/ui/Marquee.jsx";
+import IntroVeil from "./components/ui/IntroVeil.jsx";
+import KonamiEasterEgg from "./components/ui/KonamiEasterEgg.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
+
+const BOTTOM_TICKER = [
+  "Open 7am — 10pm",
+  "Walk-ins welcome",
+  "Free WiFi",
+  "Brunch Saturdays",
+  "Live acoustic Fridays",
+  "Reserve via WhatsApp",
+  "Made in BD",
+];
 
 export default function App() {
   // Site-wide smooth scroll (no-op if prefers-reduced-motion is set).
   useLenis();
 
   return (
-    <ErrorBoundary>
+    <CartProvider>
+      <ErrorBoundary>
       {/* Top scroll-progress bar — gold shimmer line that fills as
           the user scrolls through the page. */}
       <ScrollProgress />
@@ -38,7 +53,21 @@ export default function App() {
         <Gallery />
         <CallToAction />
       </main>
+
+      {/* Reverse-direction newsroom ticker — flips direction and slow
+          speed for the second-pass rhythm just above the footer. */}
+      <Marquee items={BOTTOM_TICKER} reverse />
+
       <Footer />
     </ErrorBoundary>
+
+    {/* Page-load intro veil — gold gradient that wipes up.
+        Mounted outside ErrorBoundary so a crashed subtree still
+        releases the veil correctly. */}
+    <IntroVeil />
+
+    {/* Konami easter egg — ↑↑↓↓←→←→BA → confetti burst. */}
+    <KonamiEasterEgg />
+    </CartProvider>
   );
 }

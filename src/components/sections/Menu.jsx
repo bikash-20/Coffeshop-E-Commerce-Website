@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { menuItems } from "../../data/menuItems.js";
 import MenuCard from "../ui/MenuCard.jsx";
 import SectionHeading from "../ui/SectionHeading.jsx";
+import SectionFolio from "../ui/SectionFolio.jsx";
 import Reveal from "../ui/Reveal.jsx";
 
 // Container + item variants for the staggered grid reveal.
@@ -18,8 +19,9 @@ const card = {
 
 export default function Menu() {
   return (
-    <section id="menu" className="bg-coffee-950 py-16 sm:py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+    <section id="menu" className="relative overflow-hidden bg-coffee-950 py-16 sm:py-20 md:py-28">
+      <SectionFolio number="02" label="MENU" side="left" />
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <SectionHeading
             eyebrow="The Menu"

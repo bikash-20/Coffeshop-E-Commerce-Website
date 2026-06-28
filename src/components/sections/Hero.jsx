@@ -6,6 +6,7 @@ import Reveal from "../ui/Reveal.jsx";
 import AnimatedHeadline from "../ui/AnimatedHeadline.jsx";
 import SteamBackground from "../ui/SteamBackground.jsx";
 import Marquee from "../ui/Marquee.jsx";
+import Magnetic from "../ui/Magnetic.jsx";
 
 const REDUCED_MOTION =
   typeof window !== "undefined" &&
@@ -116,16 +117,20 @@ export default function Hero() {
 
           <Reveal delay={0.5}>
             <div className="flex flex-col gap-3 pt-2 xs:flex-row xs:flex-wrap xs:items-center xs:gap-4">
-              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
-                <Button as="a" href="#menu" variant="solid" className="w-full xs:w-auto">
-                  View the Menu
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
-                <Button as="a" href="#story" variant="ghost" className="w-full xs:w-auto">
-                  Our Story
-                </Button>
-              </motion.div>
+              <Magnetic>
+                <motion.div whileTap={{ scale: 0.97 }}>
+                  <Button as="a" href="#menu" variant="solid" className="w-full xs:w-auto">
+                    View the Menu
+                  </Button>
+                </motion.div>
+              </Magnetic>
+              <Magnetic>
+                <motion.div whileTap={{ scale: 0.97 }}>
+                  <Button as="a" href="#story" variant="ghost" className="w-full xs:w-auto">
+                    Our Story
+                  </Button>
+                </motion.div>
+              </Magnetic>
             </div>
           </Reveal>
         </motion.div>

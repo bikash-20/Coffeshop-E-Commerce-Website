@@ -1,7 +1,9 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef } from "react";
 import { moodLatteArt, moodSteamWood } from "../../assets/images.js";
 import SectionHeading from "../ui/SectionHeading.jsx";
+import SectionFolio from "../ui/SectionFolio.jsx";
+import Divider from "../ui/Divider.jsx";
 
 const REDUCED_MOTION =
   typeof window !== "undefined" &&
@@ -9,6 +11,9 @@ const REDUCED_MOTION =
 
 export default function Story() {
   const ref = useRef(null);
+  const quoteRef = useRef(null);
+  const quoteInView = useInView(quoteRef, { once: true, amount: 0.5 });
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -24,14 +29,22 @@ export default function Story() {
 
   return (
     <section id="story" ref={ref} className="relative overflow-hidden bg-cream-100 py-16 sm:py-20 md:py-28">
-      {/* Decorative giant quote mark watermark — visible on dark phone screens */}
-      <div
+      {/* Decorative chapter number — magazine-style "01 — STORY" */}
+      <SectionFolio number="01" label="STORY" side="right" />
+
+      {/* Decorative giant quote mark watermark — animates in + tints gold at center */}
+      <motion.div
+        ref={quoteRef}
         aria-hidden="true"
+        initial={{ opacity: 0, scale: 0.6, y: 60 }}
+        animate={quoteInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
         className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2
-                   font-display text-[18rem] leading-none text-coffee-900/[0.04] sm:text-[26rem]"
+                   font-display text-[18rem] leading-none sm:text-[26rem]"
+        style={{ color: quoteInView ? "rgba(212,175,122,0.18)" : "rgba(31,20,13,0.04)", transition: "color 1.6s ease" }}
       >
         “
-      </div>
+      </motion.div>
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHeading
@@ -41,7 +54,15 @@ export default function Story() {
           align="left"
         />
 
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-2 sm:gap-6">
+        {/* Pull-quote uses Cormorant Garamond italic — a second serif
+            voice for editorial flavor beyond Playfair Display. */}
+        <blockquote className="mt-8 border-l-2 border-gold-500/60 pl-5 font-serif-italic text-2xl italic leading-snug text-coffee-800 sm:mt-10 sm:text-3xl md:text-4xl">
+          The best cup of coffee is the one you remember a year later —
+          <span className="text-coffee-600"> not the strongest, but the most honest.</span>
+        </blockquote>
+
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6">
+
           <motion.figure
             style={{ x: leftX, rotate: leftRotate }}
             initial={{ opacity: 0, x: -60 }}

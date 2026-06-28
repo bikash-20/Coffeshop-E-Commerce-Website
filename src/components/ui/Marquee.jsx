@@ -12,7 +12,8 @@
  * Items separated by the `·` dot in serif italic for that
  * fashion-magazine editorial feel.
  */
-export default function Marquee({ items, className = "" }) {
+export default function Marquee({ items, className = "", reverse = false }) {
+  const trackClass = reverse ? "marquee-track-reverse" : "marquee-track";
   return (
     <div
       className={`relative overflow-hidden border-y border-gold-500/15
@@ -31,7 +32,7 @@ export default function Marquee({ items, className = "" }) {
         aria-hidden="true"
       />
 
-      <div className="marquee-track flex w-max items-center gap-8 whitespace-nowrap will-change-transform sm:gap-12">
+      <div className={`${trackClass} flex w-max items-center gap-8 whitespace-nowrap will-change-transform sm:gap-12`}>
         {[...items, ...items].map((item, i) => (
           <span
             key={`${item}-${i}`}

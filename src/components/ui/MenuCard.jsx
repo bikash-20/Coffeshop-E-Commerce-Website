@@ -1,37 +1,31 @@
 import { useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useCart } from "../../context/CartContext.jsx";
+import { Plus, Check } from "lucide-react";
 
 /**
- * Single menu item card.
+ * Menu item card — three layered motion details:
+ *   1. Outer tilt + lift on hover (3D perspective tilt toward cursor).
+ *   2. Image parallax that moves opposite to the tilt.
+ *   3. "Add" affordance that ripples, swaps to a checkmark, and bumps
+ *      the global cart badge via CartContext.
  *
- * Two motion layers stacked:
- *   1. Outer `motion.article` — handles whileHover lift + tap squish,
- *      AND the 3D tilt that follows the cursor (max ±8°). Uses spring
- *      smoothing so the tilt "follows" the cursor instead of
- *      snapping.
- *   2. Inner image div — a subtle parallax zoom so the photo appears
- *      to live inside the tilted card rather than flat on it.
- *
- * Tilt is disabled on touch devices (no pointermove), so mobile users
- * still get the simple lift/tap feedback from before.
+ * Touch-device users still get the simple lift + tap feedback;
+ * pointer-relative tilt is fine-pointer-only.
  */
 export default function MenuCard({ item }) {
   const ref = useRef(null);
+  const { addItem, count } = useCart();
+  const [added, setAdded] = useState(false);
+  const [ripples, setRipples] = useState([]);
 
-  // Pointer-relative offsets in the range -1..1 (centered on the card).
   const px = useMotionValue(0);
   const py = useMotionValue(0);
-  // Spring-smoothed versions used for the actual transform so the
-  // tilt feels physical, not robotic.
   const sx = useSpring(px, { stiffness: 220, damping: 22, mass: 0.4 });
   const sy = useSpring(py, { stiffness: 220, damping: 22, mass: 0.4 });
 
-  // Tilt ±8° on each axis at the extremes of pointer travel.
   const rotateY = useTransform(sx, [-1, 1], [-8, 8]);
   const rotateX = useTransform(sy, [-1, 1], [8, -8]);
-
-  // Subtle image parallax — moves opposite to the tilt so it feels
-  // like the photo is recessed into the card surface.
   const imgX = useTransform(sx, [-1, 1], [-10, 10]);
   const imgY = useTransform(sy, [-1, 1], [-10, 10]);
 
@@ -42,13 +36,25 @@ export default function MenuCard({ item }) {
     const rect = ref.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
-    // Map 0..1 → -1..1
     px.set(x * 2 - 1);
     py.set(y * 2 - 1);
   }
   function onLeave() {
     px.set(0);
     py.set(0);
+  }
+
+  function handleAdd(e) {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const id = Date.now();
+    setRipples((r) => [...r, { id, x, y }]);
+    setTimeout(() => setRipples((r) => r.filter((p) => p.id !== id)), 600);
+    addItem(item);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1100);
   }
 
   return (
@@ -73,7 +79,7 @@ export default function MenuCard({ item }) {
       whileHover={{ y: -6 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 320, damping: 22 }}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gold-500/15
+      className="conic-border group flex h-full flex-col overflow-hidden rounded-2xl border border-gold-500/15
                  bg-coffee-900/60 shadow-lg shadow-black/20 transition-colors duration-300
                  hover:border-gold-500/40 hover:shadow-xl hover:shadow-black/30"
     >
@@ -90,7 +96,6 @@ export default function MenuCard({ item }) {
           transition={{ duration: 0.35, ease: "easeOut" }}
           className="h-full w-full object-cover"
         />
-        {/* Gradient sheen that sweeps across on hover */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-gradient-to-tr
@@ -98,11 +103,9 @@ export default function MenuCard({ item }) {
                      transition-opacity duration-500 group-hover:opacity-100"
         />
         {item.tag && (
-          <span
-            className="absolute left-3 top-3 rounded-full bg-coffee-950/80 px-3 py-1
-                       text-[11px] font-semibold uppercase tracking-wide text-gold-400
-                       backdrop-blur-sm"
-          >
+          <span className="absolute left-3 top-3 rounded-full bg-coffee-950/80 px-3 py-1
+                          text-[11px] font-semibold uppercase tracking-wide text-gold-400
+                          backdrop-blur-sm">
             {item.tag}
           </span>
         )}
@@ -115,6 +118,56 @@ export default function MenuCard({ item }) {
           {item.price}
           <span className="ml-1 text-sm font-medium text-cream-300">{item.currency}</span>
         </p>
+
+        {/* Add to cart — ripple + checkmark micro-interaction */}
+        <button
+          onClick={handleAdd}
+          data-cursor="hover"
+          className="relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-full
+                     bg-gold-500/15 px-4 py-2 text-sm font-semibold text-gold-300
+                     transition-colors hover:bg-gold-500/25 hover:text-gold-200"
+        >
+          {/* Ripples — animated circle spawning from the click point */}
+          <AnimatePresence>
+            {ripples.map((r) => (
+              <motion.span
+                key={r.id}
+                initial={{ scale: 0, opacity: 0.6 }}
+                animate={{ scale: 4, opacity: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                style={{ left: r.x, top: r.y, x: "-50%", y: "-50%" }}
+                className="pointer-events-none absolute h-6 w-6 rounded-full bg-gold-400"
+              />
+            ))}
+          </AnimatePresence>
+
+          <AnimatePresence mode="wait" initial={false}>
+            {added ? (
+              <motion.span
+                key="check"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="inline-flex items-center gap-2"
+              >
+                <Check className="h-4 w-4" /> Added
+              </motion.span>
+            ) : (
+              <motion.span
+                key="add"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="inline-flex items-center gap-2"
+              >
+                <Plus className="h-4 w-4" /> Add to order
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
       </div>
     </motion.article>
   );
