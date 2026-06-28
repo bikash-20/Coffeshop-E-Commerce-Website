@@ -7,6 +7,13 @@ import {
   menuCaramelFrappe,
 } from "../assets/images.js";
 
+// GitHub Pages serves this site under /Coffeshop-E-Commerce-Website/,
+// so a hardcoded "/foo.jpeg" resolves to bikash-20.github.io/foo.jpeg —
+// which doesn't exist (it's at bikash-20.github.io/Coffeshop-E-Commerce-Website/foo.jpeg).
+// Using import.meta.env.BASE_URL makes the path portable across
+// localhost / a custom domain / the GitHub Pages base path.
+const base = import.meta.env.BASE_URL;
+
 /**
  * Menu catalog — the single source of truth for drink items.
  * Prices are in BDT (Bangladeshi Taka, "tk") to match the source menu.
@@ -70,7 +77,7 @@ export const menuItems = [
     name: "Vanilla Frappe",
     price: 330,
     currency: "tk",
-    image: "/vanilla-frappe.jpeg",
+    image: `${base}vanilla-frappe.jpeg`,
     tag: "Smooth",
   },
   {
@@ -78,7 +85,7 @@ export const menuItems = [
     name: "Salted Caramel Banana Macchiato",
     price: 365,
     currency: "tk",
-    image: "/salted-caramel-banana-macchiato.jpeg",
+    image: `${base}salted-caramel-banana-macchiato.jpeg`,
     tag: "New",
   },
   {
@@ -86,7 +93,7 @@ export const menuItems = [
     name: "Vanilla Coffee Greek Yogurt Smoothie",
     price: 395,
     currency: "tk",
-    image: "/Vanilla_Coffee_Greek_Yogurt_Smoothie.jpg",
+    image: `${base}Vanilla_Coffee_Greek_Yogurt_Smoothie.jpg`,
     tag: "Power",
   },
   {
@@ -94,7 +101,7 @@ export const menuItems = [
     name: "French Vanilla Coffee",
     price: 285,
     currency: "tk",
-    image: "/what-is-french-vanilla-coffee.webp",
+    image: `${base}what-is-french-vanilla-coffee.webp`,
     tag: "Aromatic",
   },
 ];
