@@ -4,7 +4,6 @@ import { heroSplashLarge } from "../../assets/images.js";
 import Button from "../ui/Button.jsx";
 import Reveal from "../ui/Reveal.jsx";
 import AnimatedHeadline from "../ui/AnimatedHeadline.jsx";
-import SteamBackground from "../ui/SteamBackground.jsx";
 import Marquee from "../ui/Marquee.jsx";
 import Magnetic from "../ui/Magnetic.jsx";
 
@@ -72,10 +71,7 @@ export default function Hero() {
       style={{ opacity: heroOpacity, y: heroY }}
       className="relative flex min-h-[100svh] items-center overflow-hidden bg-coffee-950 pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-24"
     >
-      {/* Animated steam layer — sits behind everything */}
-      <SteamBackground density={14} />
-
-      {/* Ambient gold ribbon glow — decorative gradient, not an image */}
+      {/* Ambient gold ribbon glow — static decorative gradient */}
       <div
         className="pointer-events-none absolute -right-32 top-1/4 h-[480px] w-[480px] rounded-full
                    bg-gradient-to-br from-gold-500/20 via-caramel-500/10 to-transparent blur-3xl"
@@ -135,19 +131,8 @@ export default function Hero() {
           </Reveal>
         </motion.div>
 
-        {/* Right: parallax splash photo with rotating rings */}
+        {/* Right: parallax splash photo */}
         <Reveal delay={0.15} className="relative order-first md:order-none">
-          {/* Slow-rotating outer ring — gold dashed border */}
-          <div
-            aria-hidden="true"
-            className="spin-slow absolute inset-0 -m-6 rounded-full border border-dashed border-gold-500/30 sm:-m-10"
-          />
-          {/* Counter-rotating inner ring — thinner, lighter */}
-          <div
-            aria-hidden="true"
-            className="spin-reverse absolute inset-0 -m-3 rounded-full border border-gold-400/20 sm:-m-5"
-          />
-
           <motion.div
             style={{ y: imageY, scale: imageScale }}
             className="relative mx-auto aspect-square w-full max-w-[18rem] overflow-hidden rounded-[2rem]

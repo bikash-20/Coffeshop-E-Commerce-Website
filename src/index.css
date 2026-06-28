@@ -153,21 +153,6 @@ body {
   }
 }
 
-/* Steam wisp — soft drift + fade used by the animated steam layer */
-@keyframes steam-rise {
-  0% {
-    transform: translate3d(0, 0, 0) scale(0.8);
-    opacity: 0;
-  }
-  20% {
-    opacity: var(--steam-opacity, 0.6);
-  }
-  100% {
-    transform: translate3d(var(--steam-drift, 10px), -180px, 0) scale(1.3);
-    opacity: 0;
-  }
-}
-
 /* Gold shimmer — diagonal gradient sweep across text or a pill */
 @keyframes gold-shimmer {
   0% {
@@ -204,18 +189,6 @@ body {
 }
 .marquee-track:hover {
   animation-play-state: paused;
-}
-
-/* Slow rotating ring used behind the hero splash photo */
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.spin-slow {
-  animation: spin-slow 30s linear infinite;
-}
-.spin-reverse {
-  animation: spin-slow 40s linear infinite reverse;
 }
 
 /* ------------------------------------------------------------------
