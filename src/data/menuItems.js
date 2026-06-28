@@ -61,4 +61,40 @@ export const menuItems = [
     image: menuCaramelFrappe,
     tag: "Sweet",
   },
+  // ── Sourced directly from /public — the inline-base64 pipeline is for
+  // editorial/marketing shots only; user-supplied product photos live as
+  // static files. Vite copies /public to the build root, so these resolve
+  // to absolute URLs in production.
+  {
+    id: "vanilla-frappe",
+    name: "Vanilla Frappe",
+    price: 330,
+    currency: "tk",
+    image: "/vanilla-frappe.jpeg",
+    tag: "Smooth",
+  },
+  {
+    id: "salted-caramel-banana-macchiato",
+    name: "Salted Caramel Banana Macchiato",
+    price: 365,
+    currency: "tk",
+    image: "/salted-caramel-banana-macchiato.jpeg",
+    tag: "New",
+  },
+  {
+    id: "vanilla-coffee-greek-yogurt-smoothie",
+    name: "Vanilla Coffee Greek Yogurt Smoothie",
+    price: 395,
+    currency: "tk",
+    image: "/Vanilla_Coffee_Greek_Yogurt_Smoothie.jpg",
+    tag: "Power",
+  },
+  {
+    id: "french-vanilla-coffee",
+    name: "French Vanilla Coffee",
+    price: 285,
+    currency: "tk",
+    image: "/what-is-french-vanilla-coffee.webp",
+    tag: "Aromatic",
+  },
 ];
