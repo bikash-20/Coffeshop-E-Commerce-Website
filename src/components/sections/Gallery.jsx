@@ -9,7 +9,7 @@ import SectionHeading from "../ui/SectionHeading.jsx";
 import Reveal from "../ui/Reveal.jsx";
 
 const GALLERY = [
-  { src: moodStreetSunset, alt: "A coffee cup steaming on a café table at golden-hour sunset", span: "sm:col-span-2" },
+  { src: moodStreetSunset, alt: "A coffee cup steaming on a café table at golden-hour sunset", span: "sm:col-span-2 sm:row-span-2 md:col-span-2 md:row-span-2" },
   { src: moodPour, alt: "Coffee being poured into a glass cup, swirling against the cream" },
   { src: moodDarkCloth, alt: "A steaming espresso cup styled against a dark moody backdrop" },
   { src: moodSpices, alt: "A steaming cup of coffee plated with cinnamon sticks and star anise" },
@@ -18,7 +18,7 @@ const GALLERY = [
 
 export default function Gallery() {
   return (
-    <section id="gallery" className="bg-cream-100 py-20 sm:py-28">
+    <section id="gallery" className="bg-cream-100 py-16 sm:py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <SectionHeading
@@ -28,7 +28,7 @@ export default function Gallery() {
           />
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:grid-cols-2 md:grid-cols-3">
           {GALLERY.map((img, i) => (
             <Reveal key={img.src.slice(-12)} delay={i * 0.08} className={img.span ?? ""}>
               <figure className="h-full overflow-hidden rounded-2xl shadow-lg shadow-coffee-900/10">
@@ -36,7 +36,7 @@ export default function Gallery() {
                   src={img.src}
                   alt={img.alt}
                   loading="lazy"
-                  className="h-64 w-full object-cover transition-transform duration-500 hover:scale-105 sm:h-72"
+                  className="aspect-square w-full object-cover transition-transform duration-500 hover:scale-105 sm:aspect-auto sm:h-64 md:h-72"
                 />
               </figure>
             </Reveal>

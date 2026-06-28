@@ -33,14 +33,79 @@
   --color-cream-300: #ecdfc9;
 }
 
+/* ------------------------------------------------------------------
+   Global responsive defaults
+   - prevent horizontal scroll on tiny/zoomed viewports
+   - respect iOS safe-area insets for notched devices
+   - use html as the smoother proxy so anchors don't reflow jankily
+------------------------------------------------------------------- */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/* Anchor targets should land below the fixed navbar (h-16 = 4rem) plus
+   a little breathing room. Tailwind doesn't ship a `scroll-mt-*` utility
+   so we declare the handful we use here. */
+[id="story"],
+[id="menu"],
+[id="gallery"],
+[id="contact"] {
+  scroll-margin-top: 5rem;
+}
+
 html {
   scroll-behavior: smooth;
+  /* Add a hair of horizontal padding so 320px-wide devices never paint
+     edge-to-edge against fixed-position children (nav, glows). */
+  scroll-padding-top: 5rem;
 }
 
 body {
   background-color: var(--color-coffee-950);
   color: var(--color-cream-200);
   font-family: var(--font-body);
+  /* Use safe-area insets on the inline axis so the content never sits
+     under a notch / dynamic island on iOS Safari. */
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* ------------------------------------------------------------------
+   Fluid type — clamps between a min and max so a single class scales
+   smoothly from ~320px phones up through 4K monitors, instead of
+   jumping at fixed Tailwind breakpoints.
+   min-size → preferred-vw → max-size
+------------------------------------------------------------------- */
+.fluid-hero {
+  font-size: clamp(2rem, 4.5vw + 1rem, 4.5rem);
+  line-height: 1.05;
+}
+.fluid-h2 {
+  font-size: clamp(1.625rem, 1.6vw + 1rem, 3rem);
+  line-height: 1.15;
+}
+.fluid-h3 {
+  font-size: clamp(1.125rem, 0.4vw + 1rem, 1.5rem);
+}
+.fluid-body {
+  font-size: clamp(0.95rem, 0.25vw + 0.85rem, 1.125rem);
+}
+
+/* ------------------------------------------------------------------
+   Touch targets — every interactive element (button/link) should be
+   at least 44×44 px on touch devices, per WCAG 2.5.5 / Apple HIG.
+   We bump the smaller icon-only footer links up to spec without
+   changing their visual footprint.
+------------------------------------------------------------------- */
+@media (pointer: coarse) {
+  .touch-target {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 /* Respect reduced-motion preference site-wide */

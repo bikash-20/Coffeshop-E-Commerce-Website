@@ -14,23 +14,23 @@ export default function SectionHeading({
   const alignClass = align === "left" ? "text-left items-start" : "text-center items-center";
 
   return (
-    <div className={`flex flex-col gap-4 ${alignClass}`}>
+    <div className={`flex flex-col gap-3 sm:gap-4 ${alignClass}`}>
       {eyebrow && (
-        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold-500">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold-500 sm:text-xs">
           {eyebrow}
         </span>
       )}
       <h2
-        className={`font-display text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight ${
+        className={`fluid-h2 font-display font-semibold leading-tight ${
           light ? "text-cream-100" : "text-coffee-900"
         }`}
       >
         {title}
       </h2>
-      <div className="h-px w-16 bg-gold-500/60" />
+      <div className="h-px w-12 bg-gold-500/60 sm:w-16" />
       {description && (
         <p
-          className={`max-w-xl text-base sm:text-lg ${
+          className={`fluid-body max-w-xl ${
             light ? "text-cream-300" : "text-coffee-700"
           }`}
         >

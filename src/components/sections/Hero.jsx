@@ -3,10 +3,16 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { heroSplashLarge } from "../../assets/images.js";
 import Button from "../ui/Button.jsx";
 import Reveal from "../ui/Reveal.jsx";
+import AnimatedHeadline from "../ui/AnimatedHeadline.jsx";
 
 const REDUCED_MOTION =
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const HEADLINE =
+  "A coffee website that feels warm before you even visit";
+// Index of the word to tint gold — matches the previous inline span.
+const HIGHLIGHT_INDEX = 6; // "warm"
 
 /** Small ambient "floating bean" decoration — purely CSS/motion, no extra image asset. */
 function FloatingBean({ className = "", delay = 0, size = 14 }) {
@@ -44,7 +50,7 @@ export default function Hero() {
     <section
       id="top"
       ref={sectionRef}
-      className="relative flex min-h-screen items-center overflow-hidden bg-coffee-950 pt-24"
+      className="relative flex min-h-[100svh] items-center overflow-hidden bg-coffee-950 pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-24"
     >
       {/* Ambient gold ribbon glow — decorative gradient, not an image */}
       <div
@@ -53,47 +59,52 @@ export default function Hero() {
         aria-hidden="true"
       />
 
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 px-5 sm:px-8 md:grid-cols-2">
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-5 sm:px-8 md:grid-cols-2 md:gap-12">
         {/* Left: copy */}
-        <motion.div style={{ y: textY }} className="flex flex-col gap-6">
+        <motion.div style={{ y: textY }} className="flex flex-col gap-5 sm:gap-6">
           <Reveal>
-            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-gold-500">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-500 sm:text-xs">
               Noirpixel Coffee Concept
             </span>
           </Reveal>
 
-          <Reveal delay={0.1}>
-            <h1 className="font-display text-4xl font-bold leading-[1.1] text-cream-100 sm:text-5xl md:text-6xl">
-              A coffee website that feels{" "}
-              <span className="text-gold-400">warm</span> before you even visit
-            </h1>
-          </Reveal>
+          <AnimatedHeadline
+            text={HEADLINE}
+            highlightIndex={HIGHLIGHT_INDEX}
+            delay={0.1}
+            className="fluid-hero font-display font-bold text-cream-100"
+          />
 
-          <Reveal delay={0.2}>
-            <p className="max-w-md text-base text-cream-300 sm:text-lg">
+          <Reveal delay={0.4}>
+            <p className="fluid-body max-w-md text-cream-300">
               Steam moves. Milk flows in. Sugar dissolves. Because cafés
               don't just sell coffee — they sell a feeling.
             </p>
           </Reveal>
 
-          <Reveal delay={0.3}>
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button as="a" href="#menu" variant="solid">
-                View the Menu
-              </Button>
-              <Button as="a" href="#story" variant="ghost">
-                Our Story
-              </Button>
+          <Reveal delay={0.5}>
+            <div className="flex flex-col gap-3 pt-2 xs:flex-row xs:flex-wrap xs:items-center xs:gap-4">
+              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
+                <Button as="a" href="#menu" variant="solid" className="w-full xs:w-auto">
+                  View the Menu
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}>
+                <Button as="a" href="#story" variant="ghost" className="w-full xs:w-auto">
+                  Our Story
+                </Button>
+              </motion.div>
             </div>
           </Reveal>
         </motion.div>
 
         {/* Right: parallax splash photo */}
-        <Reveal delay={0.15} className="relative">
+        <Reveal delay={0.15} className="relative order-first md:order-none">
           <motion.div
             style={{ y: imageY, scale: imageScale }}
-            className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-[2rem]
-                       shadow-2xl shadow-black/50 ring-1 ring-gold-500/20"
+            className="relative mx-auto aspect-square w-full max-w-[18rem] overflow-hidden rounded-[2rem]
+                       shadow-2xl shadow-black/50 ring-1 ring-gold-500/20
+                       sm:max-w-md"
           >
             <img
               src={heroSplashLarge}
@@ -102,17 +113,17 @@ export default function Hero() {
             />
           </motion.div>
 
-          {/* Ambient floating beans around the frame */}
-          <FloatingBean className="left-2 top-6" delay={0} size={16} />
-          <FloatingBean className="right-4 top-16" delay={0.6} size={12} />
+          {/* Ambient floating beans — fewer on mobile so they don't crowd the splash */}
+          <FloatingBean className="left-2 top-6 hidden sm:block" delay={0} size={16} />
+          <FloatingBean className="right-4 top-16 hidden sm:block" delay={0.6} size={12} />
           <FloatingBean className="bottom-10 left-10" delay={1.1} size={14} />
-          <FloatingBean className="bottom-4 right-8" delay={1.6} size={10} />
+          <FloatingBean className="bottom-4 right-8 hidden sm:block" delay={1.6} size={10} />
         </Reveal>
       </div>
 
       {/* Scroll cue */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.2em] text-gold-500/70"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.2em] text-gold-500/70 sm:bottom-8 sm:text-xs"
         animate={REDUCED_MOTION ? {} : { y: [0, 6, 0] }}
         transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
       >

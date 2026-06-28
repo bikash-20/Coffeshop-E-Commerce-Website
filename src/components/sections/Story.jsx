@@ -4,24 +4,24 @@ import Reveal from "../ui/Reveal.jsx";
 
 export default function Story() {
   return (
-    <section id="story" className="bg-cream-100 py-20 sm:py-28">
+    <section id="story" className="bg-cream-100 py-16 sm:py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <SectionHeading
             eyebrow="Our Story"
-            title="A website should feel like an experience — not just a page."
-            description="Smooth scrolling, clean visuals, and a layout that instantly makes the brand feel more professional. The kind of online presence that helps people stop scrolling, trust your business, and remember your brand."
+            title="A website should do more than inform — it should feel composed, elevated, and unforgettable."
+            description="Through refined motion, elegant visuals, and a seamless layout, we create digital experiences that communicate quality the moment someone arrives. Every detail is designed to inspire confidence, reflect sophistication, and leave a lasting impression of the brand."
             align="left"
           />
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-2 sm:gap-6">
           <Reveal delay={0.1}>
             <figure className="overflow-hidden rounded-2xl shadow-xl shadow-coffee-900/10">
               <img
                 src={moodLatteArt}
                 alt="A latte with detailed leaf-pattern foam art, viewed from above"
-                className="h-72 w-full object-cover sm:h-96"
+                className="aspect-[4/3] w-full object-cover sm:aspect-auto sm:h-72 md:h-96"
                 loading="lazy"
               />
             </figure>
@@ -31,7 +31,7 @@ export default function Story() {
               <img
                 src={moodSteamWood}
                 alt="A steaming cup of coffee resting on a rustic wooden table surrounded by beans"
-                className="h-72 w-full object-cover sm:h-96"
+                className="aspect-[4/3] w-full object-cover sm:aspect-auto sm:h-72 md:h-96"
                 loading="lazy"
               />
             </figure>

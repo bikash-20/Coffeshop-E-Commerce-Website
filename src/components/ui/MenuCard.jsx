@@ -1,13 +1,20 @@
+import { motion } from "framer-motion";
+
 /**
- * Single menu item card. Pure presentational component — receives a
- * fully-formed item object from data/menuItems.js and renders it.
+ * Single menu item card — pure presentational component. The parent
+ * `<motion.article>` gives us hover lift + tap squish in addition to
+ * the CSS transitions on the image and tag, so the whole card feels
+ * alive without needing a separate `whileHover` on every child.
  */
 export default function MenuCard({ item }) {
   return (
-    <article
-      className="group flex flex-col overflow-hidden rounded-2xl border border-gold-500/15
-                 bg-coffee-900/60 transition-all duration-300 hover:border-gold-500/40
-                 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
+    <motion.article
+      whileHover={{ y: -6 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 320, damping: 22 }}
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gold-500/15
+                 bg-coffee-900/60 shadow-lg shadow-black/20 transition-colors duration-300
+                 hover:border-gold-500/40 hover:shadow-xl hover:shadow-black/30"
     >
       <div className="relative aspect-square overflow-hidden bg-cream-100">
         <img
@@ -35,6 +42,6 @@ export default function MenuCard({ item }) {
           <span className="ml-1 text-sm font-medium text-cream-300">{item.currency}</span>
         </p>
       </div>
-    </article>
+    </motion.article>
   );
 }

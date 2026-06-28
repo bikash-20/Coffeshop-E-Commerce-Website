@@ -11,6 +11,8 @@ export default function App() {
   return (
     <ErrorBoundary>
       <Navbar />
+      {/* scroll-mt-* on every in-page anchor target so clicking a nav
+          link from the fixed header lands below the nav, not under it. */}
       <main>
         <Hero />
         <Story />
