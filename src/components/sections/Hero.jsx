@@ -4,6 +4,8 @@ import { heroSplashLarge } from "../../assets/images.js";
 import Button from "../ui/Button.jsx";
 import Reveal from "../ui/Reveal.jsx";
 import AnimatedHeadline from "../ui/AnimatedHeadline.jsx";
+import SteamBackground from "../ui/SteamBackground.jsx";
+import Marquee from "../ui/Marquee.jsx";
 
 const REDUCED_MOTION =
   typeof window !== "undefined" &&
@@ -13,6 +15,16 @@ const HEADLINE =
   "A coffee website that feels warm before you even visit";
 // Index of the word to tint gold — matches the previous inline span.
 const HIGHLIGHT_INDEX = 6; // "warm"
+
+const HIGHLIGHT_TAGS = [
+  "Fresh Brews",
+  "Hand Crafted",
+  "Since 2024",
+  "Noirpixel",
+  "Premium Beans",
+  "Made in BD",
+  "Vibes Only",
+];
 
 /** Small ambient "floating bean" decoration — purely CSS/motion, no extra image asset. */
 function FloatingBean({ className = "", delay = 0, size = 14 }) {
@@ -46,24 +58,41 @@ export default function Hero() {
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, REDUCED_MOTION ? 1 : 1.08]);
   const textY = useTransform(scrollYProgress, [0, 1], [0, REDUCED_MOTION ? 0 : -40]);
 
+  // Fade the whole hero out as the user scrolls past it — gives a
+  // cinematic "rise through the steam" exit rather than a hard cut.
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+
   return (
-    <section
+    <>
+    <motion.section
       id="top"
       ref={sectionRef}
+      style={{ opacity: heroOpacity, y: heroY }}
       className="relative flex min-h-[100svh] items-center overflow-hidden bg-coffee-950 pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-24"
     >
+      {/* Animated steam layer — sits behind everything */}
+      <SteamBackground density={14} />
+
       {/* Ambient gold ribbon glow — decorative gradient, not an image */}
       <div
         className="pointer-events-none absolute -right-32 top-1/4 h-[480px] w-[480px] rounded-full
                    bg-gradient-to-br from-gold-500/20 via-caramel-500/10 to-transparent blur-3xl"
         aria-hidden="true"
       />
+      {/* Secondary counter-glow — left side, creates depth */}
+      <div
+        className="pointer-events-none absolute -left-40 bottom-1/4 h-[400px] w-[400px] rounded-full
+                   bg-gradient-to-tr from-caramel-500/15 to-transparent blur-3xl"
+        aria-hidden="true"
+      />
 
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-5 sm:px-8 md:grid-cols-2 md:gap-12">
+      <div className="relative mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-5 sm:px-8 md:grid-cols-2 md:gap-12">
         {/* Left: copy */}
         <motion.div style={{ y: textY }} className="flex flex-col gap-5 sm:gap-6">
           <Reveal>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-500 sm:text-xs">
+            <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-500 sm:text-xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold-400 shadow-[0_0_10px_rgba(212,175,122,0.9)]" />
               Noirpixel Coffee Concept
             </span>
           </Reveal>
@@ -73,6 +102,9 @@ export default function Hero() {
             highlightIndex={HIGHLIGHT_INDEX}
             delay={0.1}
             className="fluid-hero font-display font-bold text-cream-100"
+            // Override the default gold tint with the shimmer-gold text
+            // gradient — the "warm" word reads as glowing/lit, not flat.
+            highlightClassName="shimmer-gold"
           />
 
           <Reveal delay={0.4}>
@@ -98,18 +130,36 @@ export default function Hero() {
           </Reveal>
         </motion.div>
 
-        {/* Right: parallax splash photo */}
+        {/* Right: parallax splash photo with rotating rings */}
         <Reveal delay={0.15} className="relative order-first md:order-none">
+          {/* Slow-rotating outer ring — gold dashed border */}
+          <div
+            aria-hidden="true"
+            className="spin-slow absolute inset-0 -m-6 rounded-full border border-dashed border-gold-500/30 sm:-m-10"
+          />
+          {/* Counter-rotating inner ring — thinner, lighter */}
+          <div
+            aria-hidden="true"
+            className="spin-reverse absolute inset-0 -m-3 rounded-full border border-gold-400/20 sm:-m-5"
+          />
+
           <motion.div
             style={{ y: imageY, scale: imageScale }}
             className="relative mx-auto aspect-square w-full max-w-[18rem] overflow-hidden rounded-[2rem]
-                       shadow-2xl shadow-black/50 ring-1 ring-gold-500/20
+                       shadow-2xl shadow-black/50 ring-1 ring-gold-500/30
                        sm:max-w-md"
           >
             <img
               src={heroSplashLarge}
               alt="Coffee splashing dramatically out of a cup, surrounded by scattered coffee beans"
               className="h-full w-full object-cover"
+            />
+            {/* Top-down warm gradient over the image — adds depth and
+                makes the gold accents pop against it. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-tr
+                         from-coffee-950/40 via-transparent to-gold-500/15 mix-blend-overlay"
             />
           </motion.div>
 
@@ -129,6 +179,10 @@ export default function Hero() {
       >
         Scroll to discover
       </motion.div>
-    </section>
+    </motion.section>
+
+    {/* Marquee strip — sits flush against the hero's bottom edge */}
+    <Marquee items={HIGHLIGHT_TAGS} />
+    </>
   );
 }

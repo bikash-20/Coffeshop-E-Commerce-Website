@@ -30,12 +30,53 @@ const CONTACT_BUTTONS = [
 // reveal in sequence instead of all popping in together.
 const buttonContainer = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.4 } },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.4 } },
 };
 const buttonItem = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+  hidden: { opacity: 0, y: 22, scale: 0.94 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
 };
+
+// Letter-by-letter wave for the eyebrow label — the "tick" effect
+// that you see on Notion / Linear marketing pages.
+const waveContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.04 } },
+};
+const waveChar = {
+  hidden: { y: "100%", opacity: 0 },
+  show: {
+    y: "0%",
+    opacity: 1,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+function WaveLabel({ text }) {
+  return (
+    <motion.span
+      variants={waveContainer}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.8 }}
+      aria-label={text}
+      className="inline-flex overflow-hidden"
+    >
+      {text.split("").map((c, i) => (
+        <span key={i} aria-hidden="true" className="inline-block overflow-hidden">
+          <motion.span variants={waveChar} className="inline-block">
+            {c === " " ? "\u00A0" : c}
+          </motion.span>
+        </span>
+      ))}
+    </motion.span>
+  );
+}
 
 export default function CallToAction() {
   return (
@@ -43,16 +84,24 @@ export default function CallToAction() {
       id="contact"
       className="relative overflow-hidden bg-coffee-900 py-16 sm:py-20 md:py-28"
     >
+      {/* Ambient gold radial — pulses subtly behind the heading */}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full
+                   bg-gradient-to-br from-gold-500/25 via-caramel-500/10 to-transparent blur-3xl"
+        animate={{ scale: [1, 1.08, 1], opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      />
+
       <div
         className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-gold-500/60 to-transparent"
         aria-hidden="true"
       />
-      <div className="mx-auto max-w-3xl px-5 text-center sm:px-8">
-        <Reveal>
-          <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-500 sm:text-xs">
-            Get in Touch
-          </span>
-        </Reveal>
+      <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-500 sm:text-xs">
+          <WaveLabel text="GET IN TOUCH" />
+        </span>
+
         <Reveal delay={0.1}>
           <h2 className="fluid-h2 mt-4 font-display font-semibold leading-tight text-cream-100">
             Want a website concept like this for your café or restaurant?
@@ -76,8 +125,8 @@ export default function CallToAction() {
             <motion.div
               key={btn.key}
               variants={buttonItem}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Button
                 as="a"
@@ -101,6 +150,7 @@ export default function CallToAction() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
+              data-cursor="hover"
               className="touch-target rounded-full transition-all hover:-translate-y-0.5 hover:text-gold-400"
             >
               <InstagramIcon className="h-6 w-6" />
@@ -111,6 +161,7 @@ export default function CallToAction() {
             />
             <a
               href={`mailto:${CONTACT.email}`}
+              data-cursor="hover"
               className="break-all text-sm font-medium transition-colors hover:text-gold-400 sm:break-normal"
             >
               {CONTACT.email}

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
   moodDarkCloth,
   moodPour,
@@ -16,6 +17,20 @@ const GALLERY = [
   { src: heroSplashSmall, alt: "A smaller splash of coffee captured mid-motion above the cup" },
 ];
 
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
+};
+const tile = {
+  hidden: { opacity: 0, scale: 0.92, y: 30 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 export default function Gallery() {
   return (
     <section id="gallery" className="bg-cream-100 py-16 sm:py-20 md:py-28">
@@ -28,20 +43,46 @@ export default function Gallery() {
           />
         </Reveal>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:grid-cols-2 md:grid-cols-3">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:grid-cols-2 md:grid-cols-3"
+        >
           {GALLERY.map((img, i) => (
-            <Reveal key={img.src.slice(-12)} delay={i * 0.08} className={img.span ?? ""}>
-              <figure className="h-full overflow-hidden rounded-2xl shadow-lg shadow-coffee-900/10">
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  loading="lazy"
-                  className="aspect-square w-full object-cover transition-transform duration-500 hover:scale-105 sm:aspect-auto sm:h-64 md:h-72"
-                />
-              </figure>
-            </Reveal>
+            <motion.figure
+              key={img.src.slice(-12)}
+              variants={tile}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 260, damping: 22 }}
+              className={`group relative h-full overflow-hidden rounded-2xl
+                          shadow-lg shadow-coffee-900/10 ${img.span ?? ""}`}
+            >
+              <img
+                src={img.src}
+                alt={img.alt}
+                loading="lazy"
+                className="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-110 sm:aspect-auto sm:h-64 md:h-72"
+              />
+              {/* Hover overlay — gold tint + caption */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t
+                           from-coffee-950/70 via-coffee-950/0 to-transparent
+                           opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              />
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute left-4 bottom-4
+                           translate-y-2 font-display text-sm font-medium text-cream-100
+                           opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100"
+              >
+                View · {String(i + 1).padStart(2, "0")}
+              </span>
+            </motion.figure>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
