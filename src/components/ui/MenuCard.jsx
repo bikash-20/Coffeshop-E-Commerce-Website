@@ -108,30 +108,43 @@ export default function MenuCard({ item }) {
             1:1 so user-supplied product shots crop less aggressively.
           - Background is coffee-800 (dark) instead of cream-100 (light)
             so any momentary loading state reads as intentional, not broken.
-          - Eager loading (no `loading="lazy"`): only ~10 images total and
-            this section is below the fold, but lazy + slow connections
-            produced visible white-blank placeholders that looked like
-            missing images. Total payload is <1MB; eager is fine. */}
+          - <picture> source set prefers WebP (~50% smaller) with the
+            original JPG as fallback. Every modern browser picks WebP.
+          - Explicit width/height + aspect-ratio prevent CLS.
+          - loading="lazy" is finally safe: with the WebP fallback in
+            place there is no "blank white placeholder" failure mode;
+            the JPG can carry the load while the WebP downloads.
+          - fetchpriority="low" gives the browser room to prioritize
+            hero images and other above-the-fold assets first. */}
       <div className="relative aspect-[4/5] overflow-hidden bg-coffee-800">
-        <motion.img
-          src={item.image}
-          alt={item.name}
-          decoding="async"
+        <motion.picture
           style={{
             x: finePointer ? imgX : 0,
             y: finePointer ? imgY : 0,
             scale: finePointer ? 1.06 : 1,
           }}
           transition={{ duration: 0.35, ease: "easeOut" }}
-          className="h-full w-full object-cover"
-          onError={(e) => {
-            // If an image fails to decode, log + replace with a neutral
-            // gradient so the card never shows a literal white square.
-            console.error('[MenuCard] image failed to load:', item.image);
-            e.currentTarget.style.background = 'linear-gradient(135deg, #523620, #2a1c12)';
-            e.currentTarget.style.minHeight = '100%';
-          }}
-        />
+          className="block h-full w-full"
+        >
+          <source srcSet={item.image.webp} type="image/webp" />
+          <motion.img
+            src={item.image.original}
+            alt={item.name}
+            width={800}
+            height={1000}
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+            className="block h-full w-full object-cover"
+            onError={(e) => {
+              // If an image fails to decode, log + replace with a neutral
+              // gradient so the card never shows a literal white square.
+              console.error('[MenuCard] image failed to load:', item.image.original);
+              e.currentTarget.style.background = 'linear-gradient(135deg, #523620, #2a1c12)';
+              e.currentTarget.style.minHeight = '100%';
+            }}
+          />
+        </motion.picture>
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-gradient-to-tr

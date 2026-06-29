@@ -69,7 +69,10 @@ export default function Gallery() {
               <img
                 src={img.src}
                 alt={img.alt}
+                width={1000}
+                height={img.span ? 1000 : 700}
                 loading="lazy"
+                decoding="async"
                 className="aspect-square w-full object-cover transition-transform duration-700 group-hover:scale-110 sm:aspect-auto sm:h-64 md:h-72"
               />
 

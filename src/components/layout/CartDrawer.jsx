@@ -272,12 +272,18 @@ function CartLines({ lines, onInc, onDec, onRemove }) {
             {/* Thumbnail */}
             <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-coffee-950">
               {line.item.image ? (
-                <img
-                  src={line.item.image}
-                  alt=""
-                  loading="lazy"
-                  className="h-full w-full object-cover"
-                />
+                <picture className="block h-full w-full">
+                  <source srcSet={line.item.image.webp} type="image/webp" />
+                  <img
+                    src={line.item.image.original}
+                    alt=""
+                    width={64}
+                    height={64}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+                </picture>
               ) : (
                 <div className="grid h-full w-full place-items-center text-gold-400">
                   <Coffee className="h-5 w-5" />

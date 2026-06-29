@@ -142,6 +142,9 @@ export default function Hero() {
             <img
               src={heroSplashLarge}
               alt="Coffee splashing dramatically out of a cup, surrounded by scattered coffee beans"
+              width={1200}
+              height={1200}
+              fetchpriority="high"
               className="h-full w-full object-cover"
             />
             {/* Top-down warm gradient over the image — adds depth and

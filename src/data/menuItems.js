@@ -1,107 +1,131 @@
-import {
-  menuVanillaShake,
-  menuHotChocolate,
-  menuBrowicFrappe,
-  menuEspressoFrappe,
-  menuOreoFrappe,
-  menuCaramelFrappe,
-} from "../assets/images.js";
-
-// GitHub Pages serves this site under /Coffeshop-E-Commerce-Website/,
-// so a hardcoded "/foo.jpeg" resolves to bikash-20.github.io/foo.jpeg —
-// which doesn't exist (it's at bikash-20.github.io/Coffeshop-E-Commerce-Website/foo.jpeg).
-// Using import.meta.env.BASE_URL makes the path portable across
-// localhost / a custom domain / the GitHub Pages base path.
-const base = import.meta.env.BASE_URL;
+import { base, webp } from "../lib/image.js";
 
 /**
- * Menu catalog — the single source of truth for drink items.
- * Prices are in BDT (Bangladeshi Taka, "tk") to match the source menu.
- * Keep this data-only; components should never hardcode item info inline.
+ * Menu catalog — the single source of truth for everything we sell.
+ * Grouped into categories so the Menu section can render them in
+ * blocks (drinks, then food) with a small section heading per block.
+ *
+ * Image strategy:
+ *   - All product photos live in /public. The pic() helper builds an
+ *     object with both a WebP URL and the original JPG URL. The
+ *     MenuCard renders a <picture> element that prefers WebP and
+ *     falls back to JPG — every modern browser takes the WebP, which
+ *     is ~30-60% smaller than the corresponding JPG at the same width.
+ *   - Run `python3 scripts/build_images.py` to regenerate the WebPs
+ *     after adding new photos. The script also caps long edges at
+ *     800px so we never ship a 600KB hero shot to a 384px card slot.
+ *   - Filenames must match what's in /public exactly (including
+ *     spaces — yes, "fuchka .jpg" has a trailing space; keep it).
+ *
+ * Prices are in BDT (Bangladeshi Taka, "tk"). Keep this data-only;
+ * components should never hardcode item info inline.
  */
-export const menuItems = [
+
+const item = (id, name, price, image, tag) => ({
+  id,
+  name,
+  price,
+  currency: "tk",
+  image,
+  tag,
+});
+
+/* Build the two-URL shape consumed by <picture> elements.
+   webp() is build-time; if the .webp file is missing, the browser
+   still gets a graceful JPG fallback. */
+const pic = (filename) => ({
+  webp: webp(filename),
+  original: `${base}${filename}`,
+});
+
+export const menuCategories = [
   {
-    id: "vanilla-milkshake",
-    name: "Vanilla Milk Shakes",
-    price: 275,
-    currency: "tk",
-    image: menuVanillaShake,
-    tag: "Classic",
+    id: "coffee",
+    title: "Coffee & Drinks",
+    subtitle: "Signature coffees, frappes, and warm drinks.",
+    items: [
+      item("vanilla-milkshake", "Vanilla Milk Shakes", 275, pic("coffe1.jpg"), "Classic"),
+      item("hot-chocolate", "Hot Chocolate", 290, pic("coffe art.jpg"), "Warm"),
+      item("browic-frappe", "Browic Frappe", 410, pic("coffe scribble.jpg"), "Signature"),
+      item("espresso-frappe", "Espresso Frappe", 310, pic("pizza0.jpg"), "Bold"),
+      item("oreo-frappe", "Oreo Frappe", 350, pic("pizza0.jpg"), "Crowd Favorite"),
+      item("caramel-frappe", "Caramel Frappe", 350, pic("pizza0.jpg"), "Sweet"),
+      item("vanilla-frappe", "Vanilla Frappe", 330, pic("pizza0.jpg"), "Smooth"),
+      item("french-vanilla-coffee", "French Vanilla Coffee", 285, pic("pizza0.jpg"), "Aromatic"),
+    ],
   },
   {
-    id: "hot-chocolate",
-    name: "Hot Chocolate",
-    price: 290,
-    currency: "tk",
-    image: menuHotChocolate,
-    tag: "Warm",
+    id: "pizza",
+    title: "Pizza",
+    subtitle: "Freshly baked with a soft crust, rich tomato sauce, melted cheese, and premium toppings. Made to order, served hot.",
+    items: [
+      item("pizza-margherita", "Margherita Pizza", 320, pic("pizza-1.jpg"), "Classic"),
+      item("pizza-veggie", "Veggie Pizza", 380, pic("pizza-2.jpg"), "Veg"),
+      item("pizza-chicken", "Chicken Pizza", 450, pic("pizza3.jpg"), "Popular"),
+      item("pizza-beef", "Beef Pizza", 490, pic("pizza-4.jpg"), "Hearty"),
+      item("pizza-supreme", "Supreme Pizza", 550, pic("pizz-5.jpg"), "Loaded"),
+    ],
   },
   {
-    id: "browic-frappe",
-    name: "Browic Frappe",
-    price: 410,
-    currency: "tk",
-    image: menuBrowicFrappe,
-    tag: "Signature",
+    id: "pasta",
+    title: "Pasta",
+    subtitle: "Creamy, saucy, and full of flavor — cooked with quality ingredients for a filling, comforting meal.",
+    items: [
+      item("pasta-white", "White Sauce Pasta", 350, pic("pasta.jpg"), "Creamy"),
+      item("pasta-red", "Red Sauce Pasta", 330, pic("pasta2.jpg"), "Classic"),
+      item("pasta-alfredo", "Chicken Alfredo Pasta", 420, pic("pasta 4.jpg"), "Chef's Pick"),
+      item("pasta-beef", "Spicy Beef Pasta", 450, pic("pasta2.jpg"), "Spicy"),
+      item("pasta-veg", "Mixed Veg Pasta", 300, pic("pasta 4.jpg"), "Veg"),
+    ],
   },
   {
-    id: "espresso-frappe",
-    name: "Espresso Frappe",
-    price: 310,
-    currency: "tk",
-    image: menuEspressoFrappe,
-    tag: "Bold",
+    id: "momo",
+    title: "Chicken Momo",
+    subtitle: "Soft dumplings filled with juicy chicken and lightly seasoned spices. Best enjoyed with dipping sauce.",
+    items: [
+      item("momo-steamed-6", "Steamed Chicken Momo (6 pcs)", 180, pic("chicken momo.jpg"), "Steamed"),
+      item("momo-steamed-10", "Steamed Chicken Momo (10 pcs)", 280, pic("chicken momo.jpg"), "Steamed"),
+      item("momo-fried-6", "Fried Chicken Momo (6 pcs)", 200, pic("chicken momo2.jpg"), "Fried"),
+      item("momo-fried-10", "Fried Chicken Momo (10 pcs)", 300, pic("chicken momo2.jpg"), "Fried"),
+      item("momo-special", "Special Sauce Momo (10 pcs)", 320, pic("chicken momo2.jpg"), "Special"),
+    ],
   },
   {
-    id: "oreo-frappe",
-    name: "Oreo Frappe",
-    price: 350,
-    currency: "tk",
-    image: menuOreoFrappe,
-    tag: "Crowd Favorite",
+    id: "panipuri",
+    title: "Panipuri",
+    subtitle: "Crispy puris filled with tangy water, mashed potato, chickpeas, and spicy flavors. A street-style favorite.",
+    items: [
+      item("panipuri-regular-6", "Regular Panipuri (6 pcs)", 80, pic("panipuri.jpg"), "Regular"),
+      item("panipuri-regular-10", "Regular Panipuri (10 pcs)", 120, pic("panipuri.jpg"), "Regular"),
+      item("panipuri-special-10", "Special Panipuri (10 pcs)", 150, pic("panipuri-2.jpg"), "Special"),
+      item("panipuri-spicy-10", "Extra Spicy Panipuri (10 pcs)", 160, pic("panipuri-2.jpg"), "Spicy"),
+    ],
   },
   {
-    id: "caramel-frappe",
-    name: "Caramel Frappe",
-    price: 350,
-    currency: "tk",
-    image: menuCaramelFrappe,
-    tag: "Sweet",
-  },
-  // ── Sourced directly from /public — the inline-base64 pipeline is for
-  // editorial/marketing shots only; user-supplied product photos live as
-  // static files. Vite copies /public to the build root, so these resolve
-  // to absolute URLs in production.
-  {
-    id: "vanilla-frappe",
-    name: "Vanilla Frappe",
-    price: 330,
-    currency: "tk",
-    image: `${base}vanilla-frappe.jpeg`,
-    tag: "Smooth",
+    id: "noodles",
+    title: "Noodles",
+    subtitle: "Stir-fried noodles with vegetables, sauces, and your choice of chicken, beef, or mixed toppings.",
+    items: [
+      item("noodles-veg", "Veg Noodles", 220, pic("noodles.jpg"), "Veg"),
+      item("noodles-egg", "Egg Noodles", 240, pic("noodles.jpg"), "Egg"),
+      item("noodles-chicken", "Chicken Noodles", 280, pic("noodles1.jpg"), "Chicken"),
+      item("noodles-beef", "Beef Noodles", 300, pic("noodles1.jpg"), "Beef"),
+      item("noodles-mixed", "Special Mixed Noodles", 340, pic("noodles1.jpg"), "Special"),
+    ],
   },
   {
-    id: "salted-caramel-banana-macchiato",
-    name: "Salted Caramel Banana Macchiato",
-    price: 365,
-    currency: "tk",
-    image: `${base}salted-caramel-banana-macchiato.jpeg`,
-    tag: "New",
-  },
-  {
-    id: "vanilla-coffee-greek-yogurt-smoothie",
-    name: "Vanilla Coffee Greek Yogurt Smoothie",
-    price: 395,
-    currency: "tk",
-    image: `${base}Vanilla_Coffee_Greek_Yogurt_Smoothie.jpg`,
-    tag: "Power",
-  },
-  {
-    id: "french-vanilla-coffee",
-    name: "French Vanilla Coffee",
-    price: 285,
-    currency: "tk",
-    image: `${base}what-is-french-vanilla-coffee.webp`,
-    tag: "Aromatic",
+    id: "fuchka",
+    title: "Fuchka",
+    subtitle: "Crunchy fuchka served with tamarind water, mashed potato, and a balanced blend of spice and sourness. A classic Bangladeshi favorite that brings a burst of flavor in every bite.",
+    items: [
+      item("fuchka-regular-6", "Regular Fuchka (6 pcs)", 70, pic("fuchka.jpg"), "Regular"),
+      item("fuchka-regular-10", "Regular Fuchka (10 pcs)", 110, pic("fuchka.jpg"), "Regular"),
+      item("fuchka-special-10", "Special Fuchka (10 pcs)", 140, pic("fuchka 2.jpg"), "Special"),
+      item("fuchka-spicy-10", "Hot & Spicy Fuchka (10 pcs)", 150, pic("fuchka 2.jpg"), "Spicy"),
+    ],
   },
 ];
+
+/* Flat list for cart, RAG, and any code that just wants "all items". */
+export const menuItems = menuCategories.flatMap((c) => c.items);
+

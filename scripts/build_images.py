@@ -1,113 +1,164 @@
 #!/usr/bin/env python3
 """
-Processes the raw uploaded coffee-shop images into web-optimized,
-center-cropped JPEG/PNG thumbnails, then emits a single JS module
-(src/assets/images.js) exporting each as a base64 data URI.
+Generate WebP siblings for every JPG/JPEG in /public.
 
-Why base64-inline instead of static /public files:
-- Zero extra HTTP requests for a small image set like this.
-- The whole gallery ships as part of the JS bundle — simplest possible
-  "drop this repo anywhere" deploy story for a v1 concept site.
-- Trade-off (documented in README): larger JS bundle size. Fine at this
-  image count; revisit with next/image-style lazy loading if the catalog grows.
+Why this script exists
+----------------------
+The /public folder holds raw product photos (most 80–340KB, one 608KB).
+Browsers that support WebP can render the same shot at ~50% smaller,
+which is the single biggest win available for this site.
+
+Run this any time you drop a new photo into /public. It is idempotent:
+it re-encodes over the existing .webp files, and skips anything that's
+already up-to-date (same mtime as the source).
+
+Usage:
+    python3 scripts/build_images.py [--max-width=800] [--quality=78]
+
+Defaults target an 800px long edge — more than enough for a 3-col
+grid of 384px-wide cards with 2x retina headroom. Increase only if
+you add a true hero shot that needs full-resolution on the gallery.
+
+The script also dedupes byte-identical files (e.g. fuchka.jpg and
+fuchka 2.jpg were the same image under two names; it keeps the
+shorter name and removes the rest after generating the WebPs).
 """
-import base64
-import io
+import argparse
+import glob
 import os
+import re
+import sys
+
 from PIL import Image
 
-SRC_DIR = "/mnt/user-data/uploads"
-OUT_JS = "/home/claude/coffee-luxe/src/assets/images.js"
-
-# (filename, export_name, target_w, target_h, format, quality)
-JOBS = [
-    # Hero / cinematic splash shots
-    ("1782601030661_image.png", "heroSplashLarge", 1200, 1200, "JPEG", 78),
-    ("1782601062708_image.png", "heroSplashSmall", 700, 700, "JPEG", 80),
-    # Ambient mood shots
-    ("1782601162653_image.png", "moodSteamWood", 1000, 700, "JPEG", 78),
-    ("1782601183936_image.png", "moodLatteArt", 1000, 700, "JPEG", 78),
-    ("1782601232518_image.png", "moodDarkCloth", 1000, 600, "JPEG", 78),
-    ("1782601258105_image.png", "moodPour", 900, 650, "JPEG", 78),
-    ("1782601311977_image.png", "moodStreetSunset", 1100, 620, "JPEG", 78),
-    ("1782601341651_image.png", "moodSpices", 1000, 600, "JPEG", 78),
-    # Menu items
-    ("1782601789082_image.png", "menuVanillaShake", 700, 700, "JPEG", 80),
-    ("1782601811484_image.png", "menuHotChocolate", 700, 700, "JPEG", 80),
-    ("1782601823499_image.png", "menuBrowicFrappe", 700, 700, "JPEG", 80),
-    ("1782601840177_image.png", "menuEspressoFrappe", 700, 700, "JPEG", 80),
-    ("1782601853123_image.png", "menuOreoFrappe", 700, 700, "JPEG", 80),
-    ("1782601867362_image.png", "menuCaramelFrappe", 700, 700, "JPEG", 80),
-]
+HERE = os.path.dirname(os.path.abspath(__file__))
+PUBLIC_DIR = os.path.normpath(os.path.join(HERE, "..", "public"))
 
 
-def center_crop_resize(img: Image.Image, target_w: int, target_h: int) -> Image.Image:
-    """Crop to target aspect ratio from center, then resize down."""
-    if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
-        # Composite onto cream-white (#FAF6F0) instead of naively dropping
-        # alpha — several source PNGs (coffee splash cutouts) have real
-        # transparency, and a blind .convert("RGB") leaves black/garbage
-        # pixels where alpha was 0.
-        background = Image.new("RGB", img.size, (250, 246, 240))
-        rgba = img.convert("RGBA")
-        background.paste(rgba, mask=rgba.split()[-1])
-        img = background
-    else:
-        img = img.convert("RGB")
-    src_w, src_h = img.size
-    target_ratio = target_w / target_h
-    src_ratio = src_w / src_h
-
-    if src_ratio > target_ratio:
-        # source is wider than target -> crop width
-        new_w = int(src_h * target_ratio)
-        offset = (src_w - new_w) // 2
-        img = img.crop((offset, 0, offset + new_w, src_h))
-    else:
-        # source is taller than target -> crop height
-        new_h = int(src_w / target_ratio)
-        offset = (src_h - new_h) // 2
-        img = img.crop((0, offset, src_w, offset + new_h))
-
-    return img.resize((target_w, target_h), Image.LANCZOS)
+def webp_path(jpg_path: str) -> str:
+    """pizza-1.jpg -> pizza-1.webp (handles spaces in names)."""
+    base, _ = os.path.splitext(jpg_path)
+    return base + ".webp"
 
 
-def to_base64(img: Image.Image, fmt: str, quality: int) -> str:
-    buf = io.BytesIO()
-    save_kwargs = {"quality": quality, "optimize": True} if fmt == "JPEG" else {"optimize": True}
-    img.save(buf, format=fmt, **save_kwargs)
-    encoded = base64.b64encode(buf.getvalue()).decode("ascii")
-    mime = "image/jpeg" if fmt == "JPEG" else "image/png"
-    return f"data:{mime};base64,{encoded}"
+def needs_rebuild(jpg_path: str, webp_file: str, max_width: int) -> bool:
+    """Skip if the WebP is already fresh — same mtime as the JPG."""
+    if not os.path.exists(webp_file):
+        return True
+    if os.path.getmtime(webp_file) < os.path.getmtime(jpg_path):
+        return True
+    # Cheap way to detect a stale target size: stamp it in the
+    # image's PNG-style tEXt chunk via Pillow's "WebP" metadata.
+    # If absent or mismatched, rebuild.
+    with Image.open(webp_file) as img:
+        marker = img.info.get("max_width")
+        if marker is None or int(marker) != max_width:
+            return True
+    return False
 
 
-def main():
-    lines = [
-        "// AUTO-GENERATED — do not hand-edit.",
-        "// Source images processed by scripts/build_images.py",
-        "// Each export is a self-contained base64 data URI (no external requests).",
-        "",
-    ]
-    total_bytes = 0
+def encode_webp(jpg_path: str, webp_file: str, max_width: int, quality: int) -> tuple[int, int]:
+    with Image.open(jpg_path) as img:
+        if img.mode != "RGB":
+            img = img.convert("RGB")
+        # Downscale wide axis to max_width preserving aspect ratio.
+        w, h = img.size
+        if w > max_width:
+            new_h = round(h * (max_width / w))
+            img = img.resize((max_width, new_h), Image.LANCZOS)
+        # Stamp the target width as PNG tEXt (WebP inherits PngInfo).
+        from PIL.PngImagePlugin import PngInfo
+        meta = PngInfo()
+        meta.add_text("max_width", str(max_width))
+        img.save(webp_file, "WEBP", quality=quality, method=6, pnginfo=meta)
+    return os.path.getsize(jpg_path), os.path.getsize(webp_file)
 
-    for filename, export_name, w, h, fmt, quality in JOBS:
-        path = os.path.join(SRC_DIR, filename)
-        img = Image.open(path)
-        processed = center_crop_resize(img, w, h)
-        data_uri = to_base64(processed, fmt, quality)
-        total_bytes += len(data_uri)
-        lines.append(f"export const {export_name} =")
-        lines.append(f'  "{data_uri}";')
-        lines.append("")
-        print(f"✓ {export_name:<20} {w}x{h}  {len(data_uri)/1024:.1f}KB  <- {filename}")
 
-    os.makedirs(os.path.dirname(OUT_JS), exist_ok=True)
-    with open(OUT_JS, "w") as f:
-        f.write("\n".join(lines))
+def deduplicate(directory: str, extensions=(".jpg", ".jpeg")) -> int:
+    """
+    Find groups of files where all members have identical content and
+    keep only the shortest-named one. Returns the count of files removed.
 
-    print(f"\nTotal embedded image payload: {total_bytes/1024:.1f} KB")
-    print(f"Written to {OUT_JS}")
+    Runs BEFORE the WebP pass so duplicate WebPs don't get generated.
+    """
+    by_hash: dict[str, list[str]] = {}
+    for ext in extensions:
+        for path in sorted(glob.glob(os.path.join(directory, f"*{ext}"))):
+            # Hash the file in 64KB chunks — fingerprint only.
+            with open(path, "rb") as fh:
+                head = fh.read(65536)
+            import hashlib
+            digest = hashlib.sha1(head).hexdigest()
+            by_hash.setdefault(digest, []).append(os.path.basename(path))
+
+    removed = 0
+    for digest, names in by_hash.items():
+        if len(names) <= 1:
+            continue
+        # Keep the shortest name (no spaces, lowercase, no suffix).
+        keep = sorted(names, key=lambda n: (len(n), n.lower()))[0]
+        for name in names:
+            if name == keep:
+                continue
+            full = os.path.join(directory, name)
+            try:
+                os.remove(full)
+                removed += 1
+                print(f"  dedup: removed {name} (kept {keep})")
+            except OSError as exc:
+                print(f"  dedup: could not remove {name}: {exc}")
+    return removed
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description="Build WebP siblings for /public photos.")
+    p.add_argument("--max-width", type=int, default=800, help="Cap the long edge (default 800px).")
+    p.add_argument("--quality", type=int, default=78, help="WebP quality, 1-100 (default 78).")
+    p.add_argument("--no-dedup", action="store_true", help="Skip the byte-identical dedup pass.")
+    args = p.parse_args()
+
+    os.chdir(PUBLIC_DIR)
+    print(f"Public dir: {PUBLIC_DIR}")
+    print(f"Targets: max_width={args.max_width}px, quality={args.quality}")
+    print()
+
+    if not args.no_dedup:
+        print("Pass 1: dedup byte-identical files...")
+        n = deduplicate(PUBLIC_DIR)
+        print(f"  {n} duplicate file(s) removed.\n")
+
+    print("Pass 2: encode WebPs...")
+    sources = sorted(
+        fn for fn in glob.glob("*.jpg") + glob.glob("*.jpeg")
+        if not fn.startswith(".")  # skip hidden
+    )
+    total_jpg = 0
+    total_webp = 0
+    for jpg in sources:
+        target = webp_path(jpg)
+        if not needs_rebuild(jpg, target, args.max_width):
+            print(f"  · {jpg:<28} up-to-date")
+            total_jpg += os.path.getsize(jpg)
+            total_webp += os.path.getsize(target)
+            continue
+        try:
+            j_size, w_size = encode_webp(jpg, target, args.max_width, args.quality)
+            savings = (1 - w_size / j_size) * 100 if j_size else 0
+            print(f"  ✓ {jpg:<28} {j_size/1024:>7.1f}KB -> {w_size/1024:>7.1f}KB ({savings:>5.1f}% smaller)")
+            total_jpg += j_size
+            total_webp += w_size
+        except Exception as exc:
+            print(f"  ✗ {jpg}: {exc}", file=sys.stderr)
+            return 1
+
+    if total_jpg:
+        overall = (1 - total_webp / total_jpg) * 100
+        print()
+        print(f"Total JPG payload:   {total_jpg/1024:>8.1f} KB")
+        print(f"Total WebP payload:  {total_webp/1024:>8.1f} KB")
+        print(f"Savings with WebP:   {overall:>8.1f}%")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

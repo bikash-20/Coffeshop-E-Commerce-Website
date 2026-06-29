@@ -74,8 +74,11 @@ export default function Story() {
             <img
               src={moodLatteArt}
               alt="A latte with detailed leaf-pattern foam art, viewed from above"
+              width={1000}
+              height={700}
               className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:aspect-auto sm:h-72 md:h-96"
               loading="lazy"
+              decoding="async"
             />
             {/* Hover gold border */}
             <div
@@ -95,8 +98,11 @@ export default function Story() {
             <img
               src={moodSteamWood}
               alt="A steaming cup of coffee resting on a rustic wooden table surrounded by beans"
+              width={1000}
+              height={700}
               className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105 sm:aspect-auto sm:h-72 md:h-96"
               loading="lazy"
+              decoding="async"
             />
             <div
               aria-hidden="true"
