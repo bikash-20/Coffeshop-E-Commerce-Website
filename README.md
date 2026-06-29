@@ -1,4 +1,6 @@
 # Coffee Luxe — Coffeshop E-Commerce Website
+<img width="1280" height="715" alt="image" src="https://github.com/user-attachments/assets/efd12b30-3a5a-491e-9373-583e831cf49f" />
+
 
 A scroll-driven, cinematic coffee shop concept site built to practice RAG pipelines, vector databases, and agentic AI. Not a real store — a real engineering project.
 
