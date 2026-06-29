@@ -23,7 +23,7 @@ function buildWhatsAppMessage(lines, totals) {
     .join("\n");
   const footer =
     `\n\nSubtotal: ${totals.subtotal}tk` +
-    `\nVAT (5%): ${totals.tax}tk` +
+    `\nVAT (4%): ${totals.tax}tk` +
     `\nDelivery: ${totals.delivery}tk` +
     `\nTotal: ${totals.total}tk` +
     `\n\nPlease confirm availability and delivery time. Thanks!`;
@@ -355,7 +355,7 @@ function Totals({ subtotal, tax, delivery }) {
   return (
     <dl className="flex flex-col gap-1.5 text-sm">
       <Row label="Subtotal" value={formatTk(subtotal)} />
-      <Row label="VAT (5%)" value={formatTk(tax)} />
+      <Row label="VAT (4%)" value={formatTk(tax)} />
       <Row label="Delivery" value={delivery === 0 ? "—" : formatTk(delivery)} />
       <div className="my-1 h-px bg-gold-500/15" />
       <div className="flex items-baseline justify-between">

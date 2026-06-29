@@ -6,7 +6,8 @@ A cinematic, scroll-driven coffee shop concept site — built as a
 **Concept 1** recreation (warm amber/caramel + champagne gold + dark
 coffee brown, serif display type, scroll-linked parallax hero).
 
-**Stack:** React 19 + Vite + Tailwind CSS v4 + Framer Motion
+**Stack:** React 19 + Vite + Tailwind CSS v4 + Framer Motion +
+Cloudflare Workers (Workers AI, Vectorize, D1)
 
 ---
 
@@ -110,6 +111,89 @@ not duplicated across components:
 
 Fonts: **Playfair Display** (display/headlines) + **Inter** (body),
 loaded via Google Fonts `<link>` tags in `index.html`.
+
+---
+
+## Deploy
+
+The app is split across two hosts:
+
+- **Frontend** — Vercel, auto-deploys from `main` on every push.
+  Vercel reads `vercel.json`, sees the `vite` framework, and runs
+  `npm run build` → `dist/`.
+- **Backend / AI** — Cloudflare Worker (`worker/`) with D1 (SQLite),
+  Vectorize (RAG embeddings), and Workers AI
+  (`@cf/meta/[redacted]-3.1-8b-instruct`).
+
+### Frontend → Vercel (one-time)
+
+1. Push this repo to GitHub.
+2. On [vercel.com](https://vercel.com): **Add New Project → Import** the
+   repo. Vercel auto-detects Vite. Don't change the build command.
+3. In **Settings → Environment Variables**, set:
+   - `VITE_BASE` = `/` *(empty base path; Vercel serves from `/`)*
+   - `VITE_WORKER_URL` = `https://coffee-luxe-api.<your-sub>.workers.dev`
+4. Deploy. Subsequent pushes to `main` auto-redeploy.
+
+> The default `VITE_BASE` in `vite.config.js` is the legacy
+> `/Coffeshop-E-Commerce-Website/` GitHub Pages path. If you skip
+> setting `VITE_BASE` on Vercel, the bundle will be served from
+> `/Coffeshop-E-Commerce-Website/...` and the page will 404 assets.
+> **Set it to `/`.**
+
+### Backend → Cloudflare Worker (one-time)
+
+Prereqs: `npm i -g wrangler` and `wrangler login`.
+
+```bash
+cd worker
+npm install
+
+# 1. Create the D1 database (prints a database_id — paste it into
+#    wrangler.toml under [[d1_databases]].database_id)
+npm run db:create
+
+# 2. Create the Vectorize index
+npm run vector:create
+
+# 3. Apply the schema
+npm run db:migrate
+
+# 4. Embed and upload the RAG corpus (worker/src/content.ts) to
+#    Vectorize + D1. Idempotent — safe to re-run after edits.
+npm run seed
+
+# 5. Deploy
+npm run deploy
+```
+
+After the first deploy, copy the printed Worker URL into Vercel's
+`VITE_WORKER_URL` and redeploy the frontend.
+
+The full Worker API is documented in [`worker/README.md`](worker/README.md).
+
+### Updating the RAG corpus
+
+Edit `worker/src/content.ts` (add/edit a doc in the `RAG_DOCS` array),
+then re-seed:
+
+```bash
+cd worker && npm run seed
+```
+
+The seed script is idempotent: it re-embeds and upserts everything.
+You do not need to redeploy the Worker for content changes — but
+**you do** need to redeploy if you change `index.ts` (the router
+itself).
+
+### Smoke test the live API
+
+```bash
+curl -s https://coffee-luxe-api.<sub>.workers.dev/api/health
+curl -s -X POST https://coffee-luxe-api.<sub>.workers.dev/api/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"sessionId":"test-1","message":"What is on the menu?"}'
+```
 
 ## Defensive/accessibility choices worth knowing about
 

@@ -14,6 +14,7 @@ import Marquee from "./components/ui/Marquee.jsx";
 import IntroVeil from "./components/ui/IntroVeil.jsx";
 import KonamiEasterEgg from "./components/ui/KonamiEasterEgg.jsx";
 import CartDrawer from "./components/layout/CartDrawer.jsx";
+import AIAssistant from "./components/ui/AIAssistant.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 
 const BOTTOM_TICKER = [
@@ -74,6 +75,12 @@ export default function App() {
         checking out. Mounted outside ErrorBoundary so a crashed
         section can't permanently lock the user out of their cart. */}
     <CartDrawer />
+
+    {/* AI assistant — floating button bottom-left, slide-up chat
+        panel. Mounted outside ErrorBoundary for the same reason as
+        CartDrawer. Reads VITE_WORKER_URL; shows a friendly "coming
+        soon" state if the env var isn't set yet. */}
+    <AIAssistant />
     </CartProvider>
   );
 }

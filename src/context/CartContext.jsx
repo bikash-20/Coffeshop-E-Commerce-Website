@@ -15,7 +15,7 @@ import { createContext, useCallback, useContext, useMemo, useReducer, useState }
 
 const CartContext = createContext(null);
 
-const TAX_RATE = 0.05; // 5% VAT — realistic for BD cafés
+const TAX_RATE = 0.04; // 4% VAT — per latest business decision
 const DELIVERY_FEE = 30; // tk — small delivery surcharge when cart has items
 
 function reducer(state, action) {
