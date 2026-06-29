@@ -46,7 +46,7 @@ export async function embed(env: Env, text: string): Promise<number[]> {
 export async function search(env: Env, queryVec: number[], topK = TOP_K) {
   return env.VECTORIZE.query(queryVec, {
     topK,
-    returnMetadata: false,
+    returnMetadata: "all",
   });
 }
 
