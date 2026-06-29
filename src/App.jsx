@@ -13,6 +13,7 @@ import FloatingWhatsApp from "./components/ui/FloatingWhatsApp.jsx";
 import Marquee from "./components/ui/Marquee.jsx";
 import IntroVeil from "./components/ui/IntroVeil.jsx";
 import KonamiEasterEgg from "./components/ui/KonamiEasterEgg.jsx";
+import CartDrawer from "./components/layout/CartDrawer.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 
 const BOTTOM_TICKER = [
@@ -68,6 +69,11 @@ export default function App() {
 
     {/* Konami easter egg — ↑↑↓↓←→←→BA → confetti burst. */}
     <KonamiEasterEgg />
+
+    {/* Cart drawer — slide-in side panel for reviewing items and
+        checking out. Mounted outside ErrorBoundary so a crashed
+        section can't permanently lock the user out of their cart. */}
+    <CartDrawer />
     </CartProvider>
   );
 }

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useCart } from "../../context/CartContext.jsx";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, Minus } from "lucide-react";
 
 /**
  * Menu item card — three layered motion details:
@@ -15,7 +15,12 @@ import { Plus, Check } from "lucide-react";
  */
 export default function MenuCard({ item }) {
   const ref = useRef(null);
-  const { addItem, count } = useCart();
+  // Read both the per-item quantity (if any) and the add handler.
+  // The "+ / qty / -" controls on the card let users tweak quantity
+  // inline without opening the drawer for every small adjustment.
+  const cart = useCart();
+  const line = cart.lines.find((l) => l.id === item.id);
+  const qty = line ? line.qty : 0;
   const [added, setAdded] = useState(false);
   const [ripples, setRipples] = useState([]);
 
@@ -52,9 +57,24 @@ export default function MenuCard({ item }) {
     const id = Date.now();
     setRipples((r) => [...r, { id, x, y }]);
     setTimeout(() => setRipples((r) => r.filter((p) => p.id !== id)), 600);
-    addItem(item);
+    cart.addItem(item);
     setAdded(true);
     setTimeout(() => setAdded(false), 1100);
+  }
+
+  function handleInc(e) {
+    e.stopPropagation();
+    cart.inc(item.id);
+  }
+
+  function handleDec(e) {
+    e.stopPropagation();
+    cart.dec(item.id);
+  }
+
+  function handleOpenCart(e) {
+    e.stopPropagation();
+    cart.openCart();
   }
 
   return (
@@ -135,55 +155,104 @@ export default function MenuCard({ item }) {
           <span className="ml-1 text-sm font-medium text-cream-300">{item.currency}</span>
         </p>
 
-        {/* Add to cart — ripple + checkmark micro-interaction */}
-        <button
-          onClick={handleAdd}
-          data-cursor="hover"
-          className="relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-full
-                     bg-gold-500/15 px-4 py-2 text-sm font-semibold text-gold-300
-                     transition-colors hover:bg-gold-500/25 hover:text-gold-200"
-        >
-          {/* Ripples — animated circle spawning from the click point */}
-          <AnimatePresence>
-            {ripples.map((r) => (
-              <motion.span
-                key={r.id}
-                initial={{ scale: 0, opacity: 0.6 }}
-                animate={{ scale: 4, opacity: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                style={{ left: r.x, top: r.y, x: "-50%", y: "-50%" }}
-                className="pointer-events-none absolute h-6 w-6 rounded-full bg-gold-400"
-              />
-            ))}
-          </AnimatePresence>
+        {/* Order action area — switches between "Add" and a +/- stepper
+            once the item is in the cart. The stepper also exposes a
+            tiny cart icon that opens the full drawer for review. */}
+        {qty === 0 ? (
+          <button
+            onClick={handleAdd}
+            data-cursor="hover"
+            className="relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-full
+                       bg-gold-500/15 px-4 py-2.5 text-sm font-semibold text-gold-300
+                       transition-colors hover:bg-gold-500/25 hover:text-gold-200"
+          >
+            {/* Ripples — animated circle spawning from the click point */}
+            <AnimatePresence>
+              {ripples.map((r) => (
+                <motion.span
+                  key={r.id}
+                  initial={{ scale: 0, opacity: 0.6 }}
+                  animate={{ scale: 4, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  style={{ left: r.x, top: r.y, x: "-50%", y: "-50%" }}
+                  className="pointer-events-none absolute h-6 w-6 rounded-full bg-gold-400"
+                />
+              ))}
+            </AnimatePresence>
 
-          <AnimatePresence mode="wait" initial={false}>
-            {added ? (
-              <motion.span
-                key="check"
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -10, opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="inline-flex items-center gap-2"
+            <AnimatePresence mode="wait" initial={false}>
+              {added ? (
+                <motion.span
+                  key="check"
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -10, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="inline-flex items-center gap-2"
+                >
+                  <Check className="h-4 w-4" /> Added
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="add"
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -10, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="inline-flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" /> Add to order
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        ) : (
+          <div className="mt-2 flex items-stretch gap-2">
+            {/* Stepper: − qty + */}
+            <div className="flex flex-1 items-center justify-between overflow-hidden rounded-full border border-gold-500/40 bg-gold-500/10 text-sm font-semibold text-gold-200">
+              <button
+                onClick={handleDec}
+                aria-label={`Remove one ${item.name}`}
+                data-cursor="hover"
+                className="touch-target flex h-10 w-10 items-center justify-center transition-colors hover:bg-gold-500/20"
               >
-                <Check className="h-4 w-4" /> Added
-              </motion.span>
-            ) : (
+                <Minus className="h-4 w-4" />
+              </button>
               <motion.span
-                key="add"
-                initial={{ y: 10, opacity: 0 }}
+                key={qty}
+                initial={{ y: -6, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -10, opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="inline-flex items-center gap-2"
+                transition={{ duration: 0.18 }}
+                className="min-w-[2ch] text-center font-display text-base font-bold text-gold-100"
               >
-                <Plus className="h-4 w-4" /> Add to order
+                {qty}
               </motion.span>
-            )}
-          </AnimatePresence>
-        </button>
+              <button
+                onClick={handleInc}
+                aria-label={`Add one more ${item.name}`}
+                data-cursor="hover"
+                className="touch-target flex h-10 w-10 items-center justify-center transition-colors hover:bg-gold-500/20"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+            {/* View cart button — opens the drawer for review/checkout */}
+            <button
+              onClick={handleOpenCart}
+              aria-label="Open cart"
+              data-cursor="hover"
+              className="touch-target flex h-10 w-10 shrink-0 items-center justify-center rounded-full
+                         border border-gold-500/40 bg-coffee-900/70 text-gold-300
+                         transition-colors hover:bg-coffee-800 hover:text-gold-200"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4">
+                <path d="M5 7h14l-1.5 11.5a2 2 0 0 1-2 1.75H8.5a2 2 0 0 1-2-1.75L5 7z" />
+                <path d="M9 7V5a3 3 0 0 1 6 0v2" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </motion.article>
   );

@@ -62,7 +62,7 @@ function NavLink({ link, active, onClick }) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { count } = useCart();
+  const { count, toggleCart } = useCart();
   const active = useActiveSection(["story", "menu", "gallery", "contact"]);
 
   return (
@@ -86,24 +86,38 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden items-center gap-2 lg:flex">
-          {/* Cart pill — only renders when there's something in it */}
-          <AnimatePresence>
-            {count > 0 && (
-              <motion.div
-                key={count}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 380, damping: 18 }}
-                data-cursor="hover"
-                className="touch-target relative flex items-center gap-1.5 rounded-full border border-gold-500/40 bg-coffee-900/80 px-3 py-1.5 text-xs font-semibold text-gold-300"
-              >
-                <ShoppingBag className="h-4 w-4" />
-                {count}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <Button as="a" href="#menu" variant="solid">Order Online</Button>
+            {/* Cart pill — only renders when there's something in it.
+                Clicking it opens the CartDrawer so the user can review
+                quantities, remove lines, and proceed to checkout. */}
+            <AnimatePresence>
+              {count > 0 && (
+                <motion.button
+                  type="button"
+                  key={count}
+                  onClick={toggleCart}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 380, damping: 18 }}
+                  whileHover={{ y: -1 }}
+                  whileTap={{ scale: 0.94 }}
+                  aria-label={`Open cart with ${count} item${count === 1 ? "" : "s"}`}
+                  data-cursor="hover"
+                  className="touch-target relative flex items-center gap-1.5 rounded-full border border-gold-500/40 bg-coffee-900/80 px-3 py-1.5 text-xs font-semibold text-gold-300 transition-colors hover:border-gold-500/70 hover:bg-coffee-900"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  <motion.span
+                    key={count}
+                    initial={{ y: -6, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    {count}
+                  </motion.span>
+                </motion.button>
+              )}
+            </AnimatePresence>
+            <Button as="a" href="#menu" variant="solid">Order Online</Button>
         </div>
 
         <button
@@ -136,6 +150,17 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
+          {count > 0 && (
+            <button
+              type="button"
+              onClick={() => { setOpen(false); toggleCart(); }}
+              data-cursor="hover"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full border border-gold-500/40 bg-coffee-900 px-5 py-2.5 text-sm font-semibold text-gold-300 transition-colors hover:bg-coffee-800"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              View cart ({count})
+            </button>
+          )}
           <Button as="a" href="#menu" variant="solid" className="mt-4 w-full" onClick={() => setOpen(false)}>
             Order Online
           </Button>
