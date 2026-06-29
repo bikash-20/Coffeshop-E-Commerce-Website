@@ -2,35 +2,35 @@ import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { useCart } from "../../context/CartContext.jsx";
-
-/* Realistic Coffee Luxe contact details.
-   Mirrors CallToAction.jsx — keep both in sync if these change. */
-const WHATSAPP_NUMBER = "8801XXXXXXXXX";
-const PHONE_NUMBER = "+8801XXXXXXXXX";
-const EMAIL = "coffee.luxe@gmail.com";
-
-const formatTk = (n) => `${n.toLocaleString("en-IN")} tk`;
+import {
+  whatsappLinkWithMessage,
+  telLink,
+  mailtoLink,
+} from "../../data/contact.js";
 
 /* Build a human-friendly WhatsApp order message.
    - One line per item: "<qty>× <name> — <line subtotal>tk"
    - Then a blank line, then a totals block.
-   - URL-encoded so it can be appended to wa.me/?text= */
+   - The helpers in contact.js will URL-encode the whole string so it
+     can be appended to wa.me/?text= without manual escaping. */
 function buildWhatsAppMessage(lines, totals) {
-  const header = "Hi Coffee Luxe! I'd like to place an order:%0A%0A";
+  const header = `Hi Coffee Luxe! I'd like to place an order:\n\n`;
   const body = lines
     .map((l) => {
       const lineTotal = l.item.price * l.qty;
       return `${l.qty}× ${l.item.name} — ${lineTotal}tk`;
     })
-    .join("%0A");
+    .join("\n");
   const footer =
-    `%0A%0ASubtotal: ${totals.subtotal}tk` +
-    `%0AVAT (5%%): ${totals.tax}tk` +
-    `%0ADelivery: ${totals.delivery}tk` +
-    `%0A*Total: ${totals.total}tk*` +
-    `%0A%0APlease confirm availability and delivery time. Thanks!`;
+    `\n\nSubtotal: ${totals.subtotal}tk` +
+    `\nVAT (5%): ${totals.tax}tk` +
+    `\nDelivery: ${totals.delivery}tk` +
+    `\nTotal: ${totals.total}tk` +
+    `\n\nPlease confirm availability and delivery time. Thanks!`;
   return header + body + footer;
 }
+
+const formatTk = (n) => `${n.toLocaleString("en-IN")} tk`;
 
 export default function CartDrawer() {
   const cart = useCart();
@@ -64,7 +64,10 @@ export default function CartDrawer() {
   }, [isOpen, closeCart]);
 
   const whatsappHref = useMemo(
-    () => `https://wa.me/${WHATSAPP_NUMBER}?text=${buildWhatsAppMessage(lines, { subtotal, tax, delivery, total })}`,
+    () =>
+      whatsappLinkWithMessage(
+        buildWhatsAppMessage(lines, { subtotal, tax, delivery, total })
+      ),
     [lines, subtotal, tax, delivery, total]
   );
 
@@ -190,14 +193,14 @@ export default function CartDrawer() {
                     </a>
                     <div className="grid grid-cols-2 gap-2">
                       <a
-                        href={`tel:${PHONE_NUMBER}`}
+                        href={`tel:${telLink()}`}
                         data-cursor="hover"
                         className="inline-flex items-center justify-center gap-2 rounded-full border border-gold-500/40 px-4 py-2.5 text-sm font-semibold text-gold-200 transition-colors hover:bg-gold-500/10"
                       >
                         Call to order
                       </a>
                       <a
-                        href={`mailto:${EMAIL}?subject=${encodeURIComponent("Coffee Luxe order")}`}
+                        href={mailtoLink({ subject: "Coffee Luxe order" })}
                         data-cursor="hover"
                         className="inline-flex items-center justify-center gap-2 rounded-full border border-gold-500/40 px-4 py-2.5 text-sm font-semibold text-gold-200 transition-colors hover:bg-gold-500/10"
                       >
