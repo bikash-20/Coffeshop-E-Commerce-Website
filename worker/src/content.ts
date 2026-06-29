@@ -29,7 +29,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "site",
     title: "About Coffee Luxe",
     content:
-      "Coffee Luxe (display name: Luxing Conlecting) is a cinematic coffee shop concept site — a Concept 1 recreation with warm amber, caramel, champagne gold, and dark coffee brown tones, Playfair Display headlines, and scroll-driven parallax. It is a portfolio piece, not a live ordering platform. The site is built with React 19, Vite, Tailwind CSS v4, and Framer Motion.",
+      "Coffee Luxe (display name: Luxing Conlecting) is a cozy, scroll-driven concept for a coffee shop serving fresh coffee, milkshakes, pizza, pasta, momo, noodles, panipuri, and fuchka. The visual style is warm amber, caramel, champagne gold, and dark coffee brown with Playfair Display headlines and scroll-driven parallax. It is a portfolio piece, not a live ordering platform. Built with React 19, Vite, Tailwind CSS v4, and Framer Motion.",
     url: "#top",
     tags: ["about", "stack", "tech"],
   },
@@ -48,7 +48,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Menu overview",
     content:
-      "The Coffee Luxe menu is organized in 7 sections: Coffee drinks, Pizza, Pasta, Chicken Momo, Panipuri, Noodles, and Fuchka. Prices are in Bangladeshi Taka (tk). All menu items can be ordered via the on-site cart — the Send via WhatsApp button on the checkout screen opens a pre-filled chat to the shop. The site is sectioned so each category shows only its own items.",
+      "Welcome to Coffee Luxe. The menu is organized in 7 sections — Coffee & Drinks, Pizza, Pasta, Chicken Momo, Panipuri, Noodles, and Fuchka — each shown in its own block so you only see items from one category at a time. Prices are in Bangladeshi Taka (tk). Order via the on-site cart; the Send via WhatsApp button on checkout opens a pre-filled chat to the shop.",
     url: "#menu",
     tags: ["menu", "ordering", "categories"],
   },
@@ -57,9 +57,9 @@ export const RAG_DOCS: RagDoc[] = [
   {
     id: "menu-coffee-overview",
     source: "menu",
-    title: "Coffee & Frappe drinks",
+    title: "Coffee & Drinks",
     content:
-      "Coffee and frappe section — 8 drinks. Vanilla Milk Shakes 275, Hot Chocolate 290, Browic Frappe 410 (signature), Espresso Frappe 310, Oreo Frappe 350 (crowd favorite), Caramel Frappe 350, Vanilla Frappe 330, French Vanilla Coffee 285. All priced in tk.",
+      "Coffee & Drinks — 8 handcrafted options, blended and brewed fresh to order. Vanilla Milk Shakes 275, Hot Chocolate 290, Browic Frappe 410 (signature), Espresso Frappe 310, Oreo Frappe 350 (crowd favorite), Caramel Frappe 350, Vanilla Frappe 330, French Vanilla Coffee 285. All priced in tk.",
     url: "#menu",
     tags: ["coffee", "frappe", "drinks", "category"],
   },
@@ -68,7 +68,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Vanilla Milk Shakes — 275 tk",
     content:
-      "Vanilla Milk Shakes — 275 tk. A creamy, kid-friendly dessert drink.",
+      "Cold, creamy, and blended with flavorful ingredients for a sweet and satisfying treat.",
     url: "#menu",
     tags: ["milkshake", "cold", "sweet"],
   },
@@ -77,7 +77,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Hot Chocolate — 290 tk",
     content:
-      "Hot Chocolate — 290 tk. A warm, rich cocoa drink. Best for cold weather or a cozy break.",
+      "Steaming-rich cocoa with a smooth, velvety finish — perfect for a cozy break.",
     url: "#menu",
     tags: ["hot", "chocolate", "warm"],
   },
@@ -86,7 +86,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Browic Frappe — 410 tk",
     content:
-      "Browic Frappe — 410 tk. The signature drink — a chocolate-brownie blended frappe, sweet and indulgent.",
+      "Indulgent chocolate-brownie blended frappe, sweet and thick with every sip.",
     url: "#menu",
     tags: ["frappe", "signature", "chocolate", "sweet"],
   },
@@ -95,7 +95,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Espresso Frappe — 310 tk",
     content:
-      "Espresso Frappe — 310 tk. A bold, cold coffee pick for caffeine lovers who want a chilled drink.",
+      "Chilled espresso frappe for caffeine lovers — bold, cold, and refreshingly smooth.",
     url: "#menu",
     tags: ["frappe", "coffee", "bold", "cold"],
   },
@@ -104,7 +104,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Oreo Frappe — 350 tk",
     content:
-      "Oreo Frappe — 350 tk. Crowd-favorite blended frappe with crushed Oreo cookies.",
+      "Crushed Oreo cookies blended into a creamy frappe — sweet, crunchy, and crowd-loved.",
     url: "#menu",
     tags: ["frappe", "oreo", "sweet", "crowd-favorite"],
   },
@@ -113,7 +113,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Caramel Frappe — 350 tk",
     content:
-      "Caramel Frappe — 350 tk. A sweet caramel-blended frappe, balanced and easy-drinking.",
+      "Smooth caramel-blended frappe, balanced and easy-drinking with a sweet finish.",
     url: "#menu",
     tags: ["frappe", "caramel", "sweet"],
   },
@@ -122,7 +122,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Vanilla Frappe — 330 tk",
     content:
-      "Vanilla Frappe — 330 tk. A smooth, mellow vanilla-blended frappe.",
+      "Light and mellow vanilla-blended frappe — silky, sweet, and refreshingly cool.",
     url: "#menu",
     tags: ["frappe", "vanilla", "smooth"],
   },
@@ -131,7 +131,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "French Vanilla Coffee — 285 tk",
     content:
-      "French Vanilla Coffee — 285 tk. An aromatic, mellow coffee with classic French vanilla flavoring.",
+      "Freshly brewed coffee with rich aroma and smooth taste — a classic aromatic pick.",
     url: "#menu",
     tags: ["coffee", "vanilla", "aromatic", "mellow"],
   },
@@ -140,9 +140,9 @@ export const RAG_DOCS: RagDoc[] = [
   {
     id: "menu-pizza-overview",
     source: "menu",
-    title: "Pizza section",
+    title: "Pizza",
     content:
-      "Pizza — 5 freshly baked options. Margherita 320 (classic), Veggie 380 (vegetarian), Chicken 450 (popular), Beef 490 (hearty), Supreme 550 (loaded). Soft crust, rich tomato sauce, melted cheese, premium toppings.",
+      "Pizza — 5 oven-baked options made to order and served hot. Margherita 320 (classic), Veggie 380 (vegetarian), Chicken 450 (popular), Beef 490 (hearty), Supreme 550 (loaded). Soft crust, rich tomato sauce, melted cheese, premium toppings.",
     url: "#menu",
     tags: ["pizza", "category", "baked"],
   },
@@ -151,7 +151,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Margherita Pizza — 320 tk",
     content:
-      "Margherita Pizza — 320 tk. Classic margherita with tomato sauce, mozzarella, and fresh basil.",
+      "Classic margherita — soft crust, tomato sauce, mozzarella, and fresh basil.",
     url: "#menu",
     tags: ["pizza", "classic", "veg"],
   },
@@ -160,7 +160,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Veggie Pizza — 380 tk",
     content:
-      "Veggie Pizza — 380 tk. Loaded with mixed vegetables on a soft crust.",
+      "Loaded with mixed vegetables on a soft crust, melted cheese, and rich tomato sauce.",
     url: "#menu",
     tags: ["pizza", "veg"],
   },
@@ -169,7 +169,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Chicken Pizza — 450 tk",
     content:
-      "Chicken Pizza — 450 tk. Popular choice, topped with seasoned chicken and cheese.",
+      "Seasoned chicken and cheese over a soft crust — savory and satisfying.",
     url: "#menu",
     tags: ["pizza", "chicken", "popular"],
   },
@@ -178,7 +178,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Beef Pizza — 490 tk",
     content:
-      "Beef Pizza — 490 tk. Hearty beef toppings on a soft crust — filling and flavorful.",
+      "Hearty beef toppings, melted cheese, and a soft crust — filling and flavorful.",
     url: "#menu",
     tags: ["pizza", "beef", "hearty"],
   },
@@ -187,7 +187,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Supreme Pizza — 550 tk",
     content:
-      "Supreme Pizza — 550 tk. The fully-loaded option with everything — premium toppings and extra cheese.",
+      "Fully loaded with premium toppings and extra cheese — bold, rich, and shareable.",
     url: "#menu",
     tags: ["pizza", "supreme", "loaded"],
   },
@@ -196,9 +196,9 @@ export const RAG_DOCS: RagDoc[] = [
   {
     id: "menu-pasta-overview",
     source: "menu",
-    title: "Pasta section",
+    title: "Pasta",
     content:
-      "Pasta — creamy, saucy, and full of flavor. 5 options: White Sauce Pasta 350, Red Sauce Pasta 330, Chicken Alfredo 420 (chef's pick), Spicy Beef Pasta 450, Mixed Veg Pasta 300.",
+      "Pasta — cooked al dente and tossed in creamy, saucy, or spiced sauces. 5 options: White Sauce Pasta 350, Red Sauce Pasta 330, Chicken Alfredo 420 (chef's pick), Spicy Beef Pasta 450, Mixed Veg Pasta 300.",
     url: "#menu",
     tags: ["pasta", "category", "creamy"],
   },
@@ -207,7 +207,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "White Sauce Pasta — 350 tk",
     content:
-      "White Sauce Pasta — 350 tk. Creamy alfredo-style white sauce — comfort food.",
+      "Al dente pasta in a creamy alfredo-style white sauce — smooth, rich comfort food.",
     url: "#menu",
     tags: ["pasta", "creamy", "veg"],
   },
@@ -216,7 +216,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Red Sauce Pasta — 330 tk",
     content:
-      "Red Sauce Pasta — 330 tk. Classic tomato-based sauce, simple and filling.",
+      "Al dente pasta tossed in classic tomato sauce — simple, tangy, and filling.",
     url: "#menu",
     tags: ["pasta", "tomato", "classic"],
   },
@@ -225,7 +225,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Chicken Alfredo Pasta — 420 tk",
     content:
-      "Chicken Alfredo Pasta — 420 tk. Chef's pick — white sauce with seasoned chicken.",
+      "Creamy alfredo sauce over al dente pasta with seasoned chicken — the chef's pick.",
     url: "#menu",
     tags: ["pasta", "chicken", "chefs-pick"],
   },
@@ -234,7 +234,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Spicy Beef Pasta — 450 tk",
     content:
-      "Spicy Beef Pasta — 450 tk. Spiced beef in a rich sauce — filling and bold.",
+      "Al dente pasta with spiced beef in a rich, bold sauce — hearty and full of heat.",
     url: "#menu",
     tags: ["pasta", "beef", "spicy"],
   },
@@ -243,7 +243,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Mixed Veg Pasta — 300 tk",
     content:
-      "Mixed Veg Pasta — 300 tk. Vegetarian pasta with a mix of vegetables.",
+      "Al dente pasta with a colorful mix of vegetables in a savory sauce — light and tasty.",
     url: "#menu",
     tags: ["pasta", "veg", "vegetarian"],
   },
@@ -252,9 +252,9 @@ export const RAG_DOCS: RagDoc[] = [
   {
     id: "menu-momo-overview",
     source: "menu",
-    title: "Chicken Momo section",
+    title: "Chicken Momo",
     content:
-      "Chicken Momo — soft dumplings filled with juicy chicken and lightly seasoned spices. Best enjoyed with dipping sauce. Options: Steamed 6pc 180, Steamed 10pc 280, Fried 6pc 200, Fried 10pc 300, Special Sauce 10pc 320.",
+      "Chicken Momo — soft dumplings filled with juicy chicken and lightly seasoned spices, best enjoyed with dipping sauce. Options: Steamed 6pc 180, Steamed 10pc 280, Fried 6pc 200, Fried 10pc 300, Special Sauce 10pc 320.",
     url: "#menu",
     tags: ["momo", "dumplings", "category"],
   },
@@ -263,7 +263,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Steamed Chicken Momo (6 pcs) — 180 tk",
     content:
-      "Steamed Chicken Momo (6 pcs) — 180 tk. Soft steamed chicken dumplings, served with dipping sauce.",
+      "Soft steamed chicken dumplings served with dipping sauce — juicy and tender.",
     url: "#menu",
     tags: ["momo", "steamed", "chicken"],
   },
@@ -272,7 +272,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Steamed Chicken Momo (10 pcs) — 280 tk",
     content:
-      "Steamed Chicken Momo (10 pcs) — 280 tk. Larger portion of steamed chicken momo.",
+      "Larger portion of soft steamed chicken dumplings with dipping sauce on the side.",
     url: "#menu",
     tags: ["momo", "steamed", "chicken"],
   },
@@ -281,7 +281,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Fried Chicken Momo (6 pcs) — 200 tk",
     content:
-      "Fried Chicken Momo (6 pcs) — 200 tk. Crispy fried chicken dumplings with dipping sauce.",
+      "Crispy golden-fried chicken dumplings, juicy inside — served with tasty dip.",
     url: "#menu",
     tags: ["momo", "fried", "chicken"],
   },
@@ -290,7 +290,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Fried Chicken Momo (10 pcs) — 300 tk",
     content:
-      "Fried Chicken Momo (10 pcs) — 300 tk. Larger portion of crispy fried momo.",
+      "Larger portion of crispy fried chicken momo with house dipping sauce.",
     url: "#menu",
     tags: ["momo", "fried", "chicken"],
   },
@@ -299,7 +299,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Special Sauce Momo (10 pcs) — 320 tk",
     content:
-      "Special Sauce Momo (10 pcs) — 320 tk. House-special sauce with chicken momo — a customer favorite.",
+      "Chicken momo tossed in our house-special sauce — bold, savory, and craveable.",
     url: "#menu",
     tags: ["momo", "special", "chicken"],
   },
@@ -308,9 +308,9 @@ export const RAG_DOCS: RagDoc[] = [
   {
     id: "menu-panipuri-overview",
     source: "menu",
-    title: "Panipuri section",
+    title: "Panipuri",
     content:
-      "Panipuri — crispy hollow puri filled with spiced mashed potato, tamarind water, and a balanced tangy-spicy kick. A Bangladeshi street-food classic. Options: Regular 6pc 80, Regular 10pc 120, Special 10pc 150, Extra Spicy 10pc 160.",
+      "Panipuri — crispy hollow puris filled with tangy tamarind water, mashed potato, chickpeas, and spicy chutney. A street-style favorite. Options: Regular 6pc 80, Regular 10pc 120, Special 10pc 150, Extra Spicy 10pc 160.",
     url: "#menu",
     tags: ["panipuri", "street-food", "category"],
   },
@@ -319,7 +319,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Regular Panipuri (6 pcs) — 80 tk",
     content:
-      "Regular Panipuri (6 pcs) — 80 tk. Standard portion of crispy panipuri with classic filling.",
+      "Crispy puris filled with tangy water and mashed potato — crunchy, tangy, refreshing.",
     url: "#menu",
     tags: ["panipuri", "regular", "street-food"],
   },
@@ -328,7 +328,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Regular Panipuri (10 pcs) — 120 tk",
     content:
-      "Regular Panipuri (10 pcs) — 120 tk. Larger portion of regular panipuri.",
+      "Larger portion of classic panipuri — crispy shells with tangy tamarind water.",
     url: "#menu",
     tags: ["panipuri", "regular", "street-food"],
   },
@@ -337,7 +337,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Special Panipuri (10 pcs) — 150 tk",
     content:
-      "Special Panipuri (10 pcs) — 150 tk. Special filling with extra chutney and spice.",
+      "Special filling, extra chutney, and a punchier spice level — fuller flavor in every bite.",
     url: "#menu",
     tags: ["panipuri", "special", "street-food"],
   },
@@ -346,7 +346,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Extra Spicy Panipuri (10 pcs) — 160 tk",
     content:
-      "Extra Spicy Panipuri (10 pcs) — 160 tk. For spice lovers — hot, tangy, and bold.",
+      "Bold, hot, and tangy — extra-spicy panipuri for those who like it fiery.",
     url: "#menu",
     tags: ["panipuri", "spicy", "street-food"],
   },
@@ -355,9 +355,9 @@ export const RAG_DOCS: RagDoc[] = [
   {
     id: "menu-noodles-overview",
     source: "menu",
-    title: "Noodles section",
+    title: "Noodles",
     content:
-      "Noodles — 5 stir-fried options with quality ingredients and balanced seasoning. Veg Noodles 220, Egg Noodles 240, Chicken Noodles 280, Beef Noodles 300, Special Mixed Noodles 340.",
+      "Noodles — 5 stir-fried options with vegetables, sauces, and your choice of chicken, beef, or mixed toppings. Veg 220, Egg 240, Chicken 280, Beef 300, Special Mixed 340.",
     url: "#menu",
     tags: ["noodles", "category", "stir-fry"],
   },
@@ -366,7 +366,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Veg Noodles — 220 tk",
     content:
-      "Veg Noodles — 220 tk. Vegetarian stir-fried noodles with mixed vegetables.",
+      "Stir-fried noodles tossed with mixed vegetables and savory sauce — light and tasty.",
     url: "#menu",
     tags: ["noodles", "veg", "vegetarian"],
   },
@@ -375,7 +375,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Egg Noodles — 240 tk",
     content:
-      "Egg Noodles — 240 tk. Noodles tossed with egg and seasonings.",
+      "Stir-fried noodles with scrambled egg and seasonings — simple, savory, filling.",
     url: "#menu",
     tags: ["noodles", "egg"],
   },
@@ -384,7 +384,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Chicken Noodles — 280 tk",
     content:
-      "Chicken Noodles — 280 tk. Stir-fried noodles with seasoned chicken.",
+      "Stir-fried noodles with seasoned chicken and fresh vegetables — hearty and savory.",
     url: "#menu",
     tags: ["noodles", "chicken"],
   },
@@ -393,7 +393,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Beef Noodles — 300 tk",
     content:
-      "Beef Noodles — 300 tk. Stir-fried noodles with spiced beef.",
+      "Stir-fried noodles with spiced beef and vegetables — bold, filling, and flavorful.",
     url: "#menu",
     tags: ["noodles", "beef"],
   },
@@ -402,7 +402,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Special Mixed Noodles — 340 tk",
     content:
-      "Special Mixed Noodles — 340 tk. The fully-loaded option — chicken, beef, egg, and vegetables together.",
+      "Fully loaded stir-fried noodles — chicken, beef, egg, and vegetables together.",
     url: "#menu",
     tags: ["noodles", "special", "mixed"],
   },
@@ -411,9 +411,9 @@ export const RAG_DOCS: RagDoc[] = [
   {
     id: "menu-fuchka-overview",
     source: "menu",
-    title: "Fuchka section",
+    title: "Fuchka",
     content:
-      "Fuchka — crunchy shells with tamarind water, mashed potato, and a balanced blend of spice and sourness. A Bangladeshi classic. Options: Regular 6pc 70, Regular 10pc 110, Special 10pc 140, Hot & Spicy 10pc 150.",
+      "Fuchka — crunchy shells filled with tamarind water, mashed potato, and a balanced blend of spice and sourness. A classic Bangladeshi favorite. Options: Regular 6pc 70, Regular 10pc 110, Special 10pc 140, Hot & Spicy 10pc 150.",
     url: "#menu",
     tags: ["fuchka", "street-food", "category"],
   },
@@ -422,7 +422,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Regular Fuchka (6 pcs) — 70 tk",
     content:
-      "Regular Fuchka (6 pcs) — 70 tk. Standard portion of classic fuchka.",
+      "Crunchy fuchka shells with tangy tamarind water and mashed potato — burst of flavor.",
     url: "#menu",
     tags: ["fuchka", "regular", "street-food"],
   },
@@ -431,7 +431,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Regular Fuchka (10 pcs) — 110 tk",
     content:
-      "Regular Fuchka (10 pcs) — 110 tk. Larger portion of regular fuchka.",
+      "Larger portion of classic fuchka — crunchy, tangy, and refreshingly sour.",
     url: "#menu",
     tags: ["fuchka", "regular", "street-food"],
   },
@@ -440,7 +440,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Special Fuchka (10 pcs) — 140 tk",
     content:
-      "Special Fuchka (10 pcs) — 140 tk. Special filling, extra chutney.",
+      "Special filling with extra chutney and spice — fuller, more flavorful punch.",
     url: "#menu",
     tags: ["fuchka", "special", "street-food"],
   },
@@ -449,7 +449,7 @@ export const RAG_DOCS: RagDoc[] = [
     source: "menu",
     title: "Hot & Spicy Fuchka (10 pcs) — 150 tk",
     content:
-      "Hot & Spicy Fuchka (10 pcs) — 150 tk. Bold, hot, and tangy — for spice lovers.",
+      "Bold, hot, and tangy — for spice lovers who like it fiery and sour.",
     url: "#menu",
     tags: ["fuchka", "spicy", "street-food"],
   },
@@ -460,9 +460,9 @@ export const RAG_DOCS: RagDoc[] = [
     source: "story",
     title: "The Coffee Luxe story",
     content:
-      "Coffee Luxe is presented as a cinematic, scroll-driven concept — a 'Concept 1' art direction. The design language is editorial magazine meets café: warm amber, caramel, champagne gold, and dark coffee brown, with Playfair Display for headlines and Inter for body. The whole site is one long scroll, with section folios (large outlined numbers), gradient glows, and a film grain overlay.",
+      "We started with a simple idea: serve fresh, flavorful food that brings comfort and joy to every customer. From cheesy pizzas and creamy milkshakes to spicy noodles and classic street-style snacks, every item is made with care and quality ingredients. We blend taste, freshness, and a cozy dining experience to make every visit special. Whether you're craving a quick snack or a full meal, we're here to serve food that feels satisfying and memorable.",
     url: "#story",
-    tags: ["brand", "design", "story"],
+    tags: ["brand", "story", "identity"],
   },
 
   // ── Operations / policy ─────────────────────────────────────

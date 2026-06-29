@@ -49,8 +49,8 @@ export default function Story() {
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         <SectionHeading
           eyebrow="Our Story"
-          title="A website should do more than inform — it should feel composed, elevated, and unforgettable."
-          description="Through refined motion, elegant visuals, and a seamless layout, we create digital experiences that communicate quality the moment someone arrives. Every detail is designed to inspire confidence, reflect sophistication, and leave a lasting impression of the brand."
+          title="From our kitchen to your favorite corner of the city."
+          description="We started with a simple idea: serve fresh, flavorful food that brings comfort and joy to every customer. From cheesy pizzas and creamy milkshakes to spicy noodles and classic street-style snacks, every item is made with care and quality ingredients. We blend taste, freshness, and a cozy dining experience to make every visit special. Whether you're craving a quick snack or a full meal, we're here to serve food that feels satisfying and memorable."
           align="left"
         />
 

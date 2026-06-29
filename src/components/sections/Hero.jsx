@@ -106,8 +106,9 @@ export default function Hero() {
 
           <Reveal delay={0.4}>
             <p className="fluid-body max-w-md text-cream-300">
-              Steam moves. Milk flows in. Sugar dissolves. Because cafés
-              don't just sell coffee — they sell a feeling.
+              Enjoy fresh coffee, milkshakes, pizza, pasta, momo, noodles,
+              panipuri, and fuchka made for every craving. Explore the menu
+              and discover delicious food at friendly prices.
             </p>
           </Reveal>
 
