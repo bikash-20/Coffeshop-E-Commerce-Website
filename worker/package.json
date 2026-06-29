@@ -1,0 +1,22 @@
+{
+  "name": "coffee-luxe-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Worker powering the Coffee Luxe AI assistant and order persistence. D1 for storage, Workers AI for inference, Vectorize for RAG.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create coffee-luxe-db",
+    "db:migrate": "wrangler d1 migrations apply coffee-luxe-db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply coffee-luxe-db --local",
+    "vector:create": "wrangler vectorize create coffee-luxe-rag --dimensions 384 --metric cosine",
+    "seed": "wrangler d1 execute coffee-luxe-db --command \"SELECT id FROM rag_docs LIMIT 1\" --remote >/dev/null 2>&1 && echo 'RAG already seeded' || (echo 'Seeding RAG…' && tsx src/seed.ts)"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240620.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "wrangler": "^3.65.1"
+  }
+}

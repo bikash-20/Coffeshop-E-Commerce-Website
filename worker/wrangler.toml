@@ -1,0 +1,47 @@
+# Cloudflare Worker configuration for Coffee Luxe.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
+#
+# One-time setup commands (run from inside this `worker/` directory):
+#
+#   npm install
+#   npm run db:create          # prints a database_id — paste it into [[d1_databases]] below
+#   npm run vector:create      # creates the Vectorize index named coffee-luxe-rag
+#   npm run db:migrate         # applies migrations to the remote D1
+#   npm run seed               # embeds + uploads the RAG corpus to Vectorize
+#
+# Then deploy:
+#   npm run deploy
+
+name = "coffee-luxe-api"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Workers AI — free inference on Llama 3.1 8B and BGE embeddings.
+# Bound as `env.AI` inside the handler.
+[ai]
+binding = "AI"
+
+# Vectorize — the RAG store. Index name `coffee-luxe-rag`,
+# 384-dim BGE-small embeddings, cosine similarity.
+# Created via: `wrangler vectorize create coffee-luxe-rag --dimensions 384 --metric cosine`
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "coffee-luxe-rag"
+
+# D1 — SQLite on the edge. Holds chat sessions, saved orders, and a
+# copy of the RAG doc catalog (Vectorize holds the vectors themselves).
+# Created via: `wrangler d1 create coffee-luxe-db`
+# The `database_id` is filled in after the create command runs.
+[[d1_databases]]
+binding = "DB"
+database_name = "coffee-luxe-db"
+database_id = "REPLACE_ME_AFTER_DB_CREATE"
+
+# CORS — the React app on Vercel calls this Worker cross-origin.
+# Add more origins here if you preview under other domains.
+[env.production.vars]
+ALLOWED_ORIGIN = "https://coffeshop-e-commerce-website.vercel.app"
+
+[env.preview.vars]
+ALLOWED_ORIGIN = "https://staging-coffeshop.vercel.app"
