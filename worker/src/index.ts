@@ -28,7 +28,7 @@ import { CONTACT } from "./contact.js";
 
 /* The chat model. 8B is fast and good enough for a domain-
    constrained assistant. Swap to a larger one if quality suffers. */
-const CHAT_MODEL = "@cf/meta/llama-3.1-8b-instruct" as const;
+const CHAT_MODEL = "@cf/meta/llama-3.2-3b-instruct" as const;
 
 /* System prompt — sets the assistant's persona, ground rules, and
    what to do when it doesn't know. The site context is appended at
@@ -61,9 +61,10 @@ function buildMessages(system: string, history: ChatRequest["history"], userMess
 
 /* ─── CORS helper ──────────────────────────────────────────────── */
 function corsHeaders(env: Env, origin: string | null): HeadersInit {
-  // Mirror the request's Origin if it matches the allowed list, else fall back to ALLOWED_ORIGIN.
-  // We keep this simple: if the request Origin equals ALLOWED_ORIGIN, echo it; else send the default.
-  const allow = origin && origin === env.ALLOWED_ORIGIN ? origin : env.ALLOWED_ORIGIN;
+  // Echo the allowed origin when we have a browser match; otherwise
+  // return a permissive wildcard so curl/server-side calls still get
+  // a usable response even without an Origin header.
+  const allow = origin && origin === env.ALLOWED_ORIGIN ? origin : "*";
   return {
     "Access-Control-Allow-Origin": allow,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
@@ -134,7 +135,8 @@ async function handleChat(env: Env, req: Request): Promise<Response> {
     })) as { response?: string };
     if (aiRes?.response?.trim()) reply = aiRes.response.trim();
   } catch (err) {
-    console.error("Workers AI run failed:", err);
+    const message = err instanceof Error ? err.stack || err.message : String(err);
+    console.error("Workers AI run failed:", message);
   }
 
   // Persist the assistant turn with the sources that were used.

@@ -36,7 +36,7 @@ index_name = "coffee-luxe-rag"
 [[d1_databases]]
 binding = "DB"
 database_name = "coffee-luxe-db"
-database_id = "REPLACE_ME_AFTER_DB_CREATE"
+database_id = "26aebcff-7a99-4097-8744-099ea9553936"
 
 # CORS — the React app on Vercel calls this Worker cross-origin.
 # Add more origins here if you preview under other domains.

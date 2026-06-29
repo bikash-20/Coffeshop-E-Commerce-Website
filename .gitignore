@@ -5,6 +5,9 @@ node_modules/
 dist/
 dist-ssr/
 
+# Cloudflare Workers local state
+worker/.wrangler/
+
 # Logs
 *.log
 npm-debug.log*
