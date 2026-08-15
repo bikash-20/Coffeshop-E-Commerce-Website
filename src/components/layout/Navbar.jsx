@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { Coffee, Menu, X, ShoppingBag } from "lucide-react";
 import Button from "../ui/Button.jsx";
 import NavClock from "./NavClock.jsx";
@@ -62,11 +62,30 @@ function NavLink({ link, active, onClick }) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { count, toggleCart } = useCart();
   const active = useActiveSection(["story", "menu", "gallery", "contact"]);
+  const { scrollY } = useScroll();
+
+  // Darken the navbar background once the user scrolls past the hero
+  // — the gold tint fades and the bar becomes more opaque/dark.
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setScrolled(latest > 80);
+  });
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-gold-500/10 bg-coffee-950/80 backdrop-blur-md">
+    <motion.header
+      animate={{
+        backgroundColor: scrolled
+          ? "rgba(31, 20, 13, 0.95)"
+          : "rgba(31, 20, 13, 0.8)",
+        borderBottomColor: scrolled
+          ? "rgba(212, 175, 122, 0.18)"
+          : "rgba(212, 175, 122, 0.1)",
+      }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="fixed top-0 z-50 w-full border-b backdrop-blur-md"
+    >
       <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4 md:px-8">
         <a href="#top" data-cursor="hover" className="flex min-w-0 items-center gap-2">
           <Coffee className="h-5 w-5 shrink-0 text-gold-500 sm:h-6 sm:w-6" strokeWidth={1.75} />
@@ -166,6 +185,6 @@ export default function Navbar() {
           </Button>
         </div>
       )}
-    </header>
+    </motion.header>
   );
 }

@@ -1,19 +1,15 @@
+import { motion } from "framer-motion";
 import { menuCategories } from "../../data/menuItems.js";
 import MenuCard from "../ui/MenuCard.jsx";
 import SectionHeading from "../ui/SectionHeading.jsx";
 import SectionFolio from "../ui/SectionFolio.jsx";
 import Reveal from "../ui/Reveal.jsx";
 
-// The menu is now grouped into categories (Coffee & Drinks, Pizza,
-// Pasta, Momo, Panipuri, Noodles, Fuchka). We render the first
-// section heading once, then loop categories with a small inline
-// heading per block. Cards render statically (no entry animation) —
-// the previous whileInView-based stagger with amount:0.2 was
-// unreliable on mobile: the grid is taller than the viewport, so
-// by the time 20% of it was on-screen the user had already scrolled
-// past the heading and seen a huge blank area below. Removing the
-// animation makes the cards immediately visible (the right call for
-// a menu that's supposed to be browsable, not a magazine reveal).
+// Menu cards use a per-category staggered reveal. Each category block
+// watches for its heading to enter the viewport, then cascades its
+// cards in with a small delay. This avoids the old problem where a
+// tall grid left blank space on mobile — now only the visible
+// category triggers its own cards.
 export default function Menu() {
   return (
     <section id="menu" className="relative overflow-hidden bg-coffee-950 py-16 sm:py-20 md:py-28">
@@ -38,6 +34,22 @@ export default function Menu() {
   );
 }
 
+const cardContainer = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
+  },
+};
+const cardItem = {
+  hidden: { opacity: 0, y: 24, scale: 0.97 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 function CategoryBlock({ category }) {
   return (
     <div>
@@ -55,11 +67,19 @@ function CategoryBlock({ category }) {
           {category.subtitle}
         </p>
       )}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+      <motion.div
+        variants={cardContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.1 }}
+        className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
+      >
         {category.items.map((item) => (
-          <MenuCard key={item.id} item={item} />
+          <motion.div key={item.id} variants={cardItem}>
+            <MenuCard item={item} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

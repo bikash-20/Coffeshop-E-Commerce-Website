@@ -15,6 +15,7 @@ import IntroVeil from "./components/ui/IntroVeil.jsx";
 import KonamiEasterEgg from "./components/ui/KonamiEasterEgg.jsx";
 import CartDrawer from "./components/layout/CartDrawer.jsx";
 import AIAssistant from "./components/ui/AIAssistant.jsx";
+import SectionDivider from "./components/ui/SectionDivider.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 
 const BOTTOM_TICKER = [
@@ -50,9 +51,13 @@ export default function App() {
 
       <main>
         <Hero />
+        <SectionDivider />
         <Story />
+        <SectionDivider />
         <Menu />
+        <SectionDivider />
         <Gallery />
+        <SectionDivider />
         <CallToAction />
       </main>
 
