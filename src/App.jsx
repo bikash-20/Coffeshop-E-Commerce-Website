@@ -49,7 +49,7 @@ export default function App() {
 
       <Navbar />
 
-      <main>
+      <main className="snap-container">
         <Hero />
         <SectionDivider />
         <Story />

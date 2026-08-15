@@ -28,7 +28,7 @@ export default function Story() {
   const rightRotate = useTransform(scrollYProgress, [0, 1], [REDUCED_MOTION ? 0 : 2, -2]);
 
   return (
-    <section id="story" ref={ref} className="relative overflow-hidden bg-cream-100 py-16 sm:py-20 md:py-28">
+    <section id="story" ref={ref} className="snap-stop relative overflow-hidden bg-cream-100 py-16 sm:py-20 md:py-28">
       {/* Decorative chapter number — magazine-style "01 — STORY" */}
       <SectionFolio number="01" label="STORY" side="right" />
 

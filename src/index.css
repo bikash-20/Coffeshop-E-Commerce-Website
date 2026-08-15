@@ -46,6 +46,23 @@ body {
   overflow-x: hidden;
 }
 
+/* Scroll-snap container — wraps the main content so hero and story
+   snap to each other on scroll. Uses "proximity" instead of
+   "mandatory" so fast swipes still feel natural (only snaps when
+   the user is close to a snap point). */
+.snap-container {
+  scroll-snap-type: y proximity;
+}
+.snap-container > * {
+  scroll-snap-align: start;
+}
+/* Only the hero and story get hard snap stops — the rest of the
+   page scrolls freely so users can browse menu/gallery/contact
+   without fighting the snap. */
+.snap-stop {
+  scroll-snap-stop: always;
+}
+
 /* Anchor targets should land below the fixed navbar (h-16 = 4rem) plus
    a little breathing room. Tailwind doesn't ship a `scroll-mt-*` utility
    so we declare the handful we use here. */
@@ -114,6 +131,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .snap-container {
+    scroll-snap-type: none;
   }
   *,
   *::before,

@@ -69,7 +69,7 @@ export default function Hero() {
       id="top"
       ref={sectionRef}
       style={{ opacity: heroOpacity, y: heroY }}
-      className="relative flex min-h-[100svh] items-center overflow-hidden bg-coffee-950 pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-24"
+      className="snap-stop relative flex min-h-[100svh] items-center overflow-hidden bg-coffee-950 pt-24 pb-16 sm:pt-28 sm:pb-20 md:pt-24"
     >
       {/* Ambient gold ribbon glow — static decorative gradient */}
       <div
