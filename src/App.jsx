@@ -16,6 +16,7 @@ import KonamiEasterEgg from "./components/ui/KonamiEasterEgg.jsx";
 import CartDrawer from "./components/layout/CartDrawer.jsx";
 import AIAssistant from "./components/ui/AIAssistant.jsx";
 import SectionDivider from "./components/ui/SectionDivider.jsx";
+import PageTransition from "./components/ui/PageTransition.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 
 const BOTTOM_TICKER = [
@@ -66,12 +67,14 @@ export default function App() {
       <Marquee items={BOTTOM_TICKER} reverse />
 
       <Footer />
-    </ErrorBoundary>
+    </ErrorBoundary>      {/* Page-load intro veil — gold gradient that wipes up.
+          Mounted outside ErrorBoundary so a crashed subtree still
+          releases the veil correctly. */}
+      <IntroVeil />
 
-    {/* Page-load intro veil — gold gradient that wipes up.
-        Mounted outside ErrorBoundary so a crashed subtree still
-        releases the veil correctly. */}
-    <IntroVeil />
+      {/* Section navigation transition — gold curtain that wipes
+          on anchor clicks (#story, #menu, etc.). */}
+      <PageTransition />
 
     {/* Konami easter egg — ↑↑↓↓←→←→BA → confetti burst. */}
     <KonamiEasterEgg />

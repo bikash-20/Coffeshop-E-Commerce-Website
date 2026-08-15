@@ -34,6 +34,10 @@ export function useLenis() {
       touchMultiplier: 1.2,
     });
 
+    // Expose globally so PageTransition (and other components) can
+    // call window.__lenis.scrollTo() for coordinated transitions.
+    window.__lenis = lenis;
+
     let rafId;
     function raf(time) {
       lenis.raf(time);
@@ -44,6 +48,7 @@ export function useLenis() {
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      window.__lenis = null;
     };
   }, []);
 }
